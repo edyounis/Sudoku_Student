@@ -1,0 +1,4 @@
+Solution found for 8/10puzzles
+average runTime: 7031
+average number of assignments per puzzle: 41778
+average number of backtracks per puzzle: 41722
