@@ -97,7 +97,7 @@ void BTSolver::solve ( int level )
 	{
 		for ( Variable* var : network.getVariables() )
 		{
-			// If all variables have been assigned
+			// If all variables haven't been assigned
 			if ( !var->isAssigned() )
 			{
 				std::cout << "Error" << std::endl;

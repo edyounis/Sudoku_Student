@@ -43,7 +43,9 @@ private:
 	bool checkCol ( int col, int value ) const;
 	bool checkBox ( int row, int col, int value ) const;
 
-	std::string intToOdometer ( int n ) const;
+	std::string intToOdometer ( int n )      const;
+	int         odometerToInt ( std::string str ) const;
+
 };
 
 #endif

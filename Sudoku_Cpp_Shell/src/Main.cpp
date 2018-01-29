@@ -66,7 +66,7 @@ int main ( int argc, char *argv[] )
 
 	struct stat path_stat;
 	stat ( file.c_str(), &path_stat );
-	bool folder = S_ISREG ( path_stat.st_mode );
+	bool folder = S_ISDIR ( path_stat.st_mode );
 
 	if ( folder )
 	{

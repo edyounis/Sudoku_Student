@@ -54,13 +54,19 @@ SudokuBoard::SudokuBoard ( std::string filename )
 	file >> p;
 	file >> q;
 	int N = p*q;
+	string x = "";
 
 	for ( int i = 0; i < N; ++i )
 	{
+		Row row;
+
 		for ( int j = 0; j < N; ++j )
 		{
-			file >> board[i][j];
+			file >> x;
+			row.push_back( odometerToInt( x ) );
 		}
+
+		board.push_back( row );
 	}
 }
 
@@ -162,9 +168,28 @@ string SudokuBoard::intToOdometer ( int n ) const
 	for ( int i = n; n > 0; n /= 36 )
 	{
 		int r  = n % 36;
-		char x = r < 10 ? '0' + r : 'A' + r;
-		ret += x;
+		char x = r < 10 ? '0' + r : 'A' + r - 10;
+		ret = x + ret;
 	}
 
 	return ret == "" ? "0" : ret;
+}
+
+int SudokuBoard::odometerToInt ( string str ) const
+{
+	int x = 0;
+
+	if ( str[0] >= '0' && str[0] <= '9' )
+		x = str[0] - '0';
+
+	if ( str[0] >= 'A' && str[0] <= 'Z' )
+		x = str[0] - 'A' + 10;
+
+	for ( int i = 1; i < str.size(); ++i )
+		x *= 36;
+
+	if ( str.size() > 1 )
+		return x + odometerToInt ( str.substr( 1, str.size() - 1 ) );
+
+	return x;
 }
