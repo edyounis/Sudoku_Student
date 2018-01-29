@@ -1,3 +1,20 @@
+# ======================================================================
+# FILE:        Makefile
+#
+# AUTHOR:      Abdullah Younis
+#
+# DESCRIPTION: This file contains useful commands for this project. You
+#              may use the following commands:
+#
+#              - make            - compiles the project and places
+#                                  the executable in the bin folder
+#
+#              - make submission - creates the the submission, you will
+#                                  submit.
+#
+#              - Don't make changes to this file.
+# ======================================================================
+
 RAW_SOURCES = \
 	Assignment.java\
 	Main.java\

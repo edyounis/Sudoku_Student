@@ -16,14 +16,14 @@
 # ======================================================================
 
 RAW_SOURCES = \
-	Assignment.cpp\
-	BTSolver.cpp\
-	Constraint.cpp\
-	ConstraintNetwork.cpp\
-	Domain.cpp\
-	Main.cpp\
-	SudokuBoard.cpp\
-	Variable.cpp
+	Main.py\
+	BTSolver.py\
+	Constraint.py\
+	ConstraintNetwork.py\
+	Domain.py\
+	SudokuBoard.py\
+	Trail.py\
+	Variable.py
 
 SOURCE_DIR = src
 BIN_DIR = bin
@@ -31,10 +31,22 @@ DOC_DIR = doc
 SOURCES = $(foreach s, $(RAW_SOURCES), $(SOURCE_DIR)/$(s))
 
 all: $(SOURCES)
+	@-eval `'/usr/bin/tclsh' '/pkg/modules/modulecmd.tcl' 'bash' load python/3.5.2` ; \
+	 if hash python3 &> /dev/null ; \
+	 then \
+		python3 -m compileall -q src ; \
+	 else \
+		python -m compileall -q src ; \
+	 fi
 	@rm -rf $(BIN_DIR)
 	@mkdir -p $(BIN_DIR)
 	@mkdir -p $(DOC_DIR)
-	@g++ -std=c++0x $(SOURCES) -o $(BIN_DIR)/Sudoku
+	@cp -a src/__pycache__/. bin
+	@for file in bin/* ; \
+	do \
+		mv -f $$file $${file%%.*}.pyc; \
+	done
+	@rm -rf src/__pycache__/
 
 submission: all
 	@rm -f *.zip
