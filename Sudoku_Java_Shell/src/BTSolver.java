@@ -59,7 +59,7 @@ public class BTSolver
 		return false;
 	}
 
-	private boolean arcConsistency()
+	private boolean norvigCheck()
 	{
 		return false;
 	}
@@ -205,8 +205,8 @@ public class BTSolver
 			case "forwardChecking":
 				return forwardChecking();
 
-			case "arcConsistency":
-				return arcConsistency();
+			case "norvigCheck":
+				return norvigCheck();
 
 			default:
 				return assignmentsCheck();

@@ -20,7 +20,7 @@ public:
 	// Consistency Checks (Implement these)
 	bool assignmentsCheck ( void );
 	bool forwardChecking  ( void );
-	bool arcConsistency   ( void );
+	bool norvigCheck      ( void );
 
 	// Variable Selectors (Implement these)
 	Variable* getfirstUnassignedVariable ( void );

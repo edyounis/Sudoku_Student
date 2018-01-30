@@ -27,7 +27,7 @@ class BTSolver:
         """
         pass
 
-    def arcConsistency(self):
+    def norvigCheck(self):
         """
             TODO: Implement Maintaining Arc Consistency.
         """
@@ -135,8 +135,8 @@ class BTSolver:
         '''which consistency check to run but it is up to you when implementing the heuristics to break ties using the other heuristics passed in'''
         if self.cChecks == "forwardChecking":
             return self.forwardChecking()
-        if self.cChecks == "arcConsistency":
-            return self.arcConsistency()
+        if self.cChecks == "norvigCheck":
+            return self.norvigCheck()
         else:
             return self.assignmentsCheck()
 

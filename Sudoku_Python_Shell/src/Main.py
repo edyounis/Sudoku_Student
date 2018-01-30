@@ -34,8 +34,8 @@ def main ( ):
         elif arg == "FC":
             cc = "forwardChecking"
 
-        elif arg == "ARC":
-            cc = "arcConsistency"
+        elif arg == "NOR":
+            cc = "norvigCheck"
 
         else:
             file = arg;

@@ -32,8 +32,8 @@ public class Main
 			else if ( token == "FC" )
 				cc = "forwardChecking";
 
-			else if ( token == "ARC" )
-				cc = "arcConsistency";
+			else if ( token == "NOR" )
+				cc = "norvigCheck";
 
 			else
 				file = token;

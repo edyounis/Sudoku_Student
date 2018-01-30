@@ -37,7 +37,7 @@ bool BTSolver::forwardChecking ( void )
 }
 
 // Implement This
-bool BTSolver::arcConsistency ( void )
+bool BTSolver::norvigCheck ( void )
 {
 	return false;
 }
@@ -134,8 +134,8 @@ bool BTSolver::checkConsistency ( void )
 	if ( cChecks == "forwardChecking" )
 		return forwardChecking();
 
-	if ( cChecks == "arcConsistency" )
-		return arcConsistency();
+	if ( cChecks == "norvigCheck" )
+		return norvigCheck();
 
 	return assignmentsCheck();
 }
