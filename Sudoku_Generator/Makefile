@@ -21,4 +21,4 @@ all:
 	 echo ""; \
 	 read -p "How many boards created?: " count; \
 	 echo ""; \
-	 python3 board_generator.py Boards/board $${count} $${rDim} $${cDim} $${cDim}
+	 python3 board_generator.py Boards/board $${count} $${rDim} $${cDim} $${vDim}
