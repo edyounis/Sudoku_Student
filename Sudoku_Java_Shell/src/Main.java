@@ -17,22 +17,22 @@ public class Main
 		{
 			String token = args[i];
 
-			if ( token == "MRV" )
+			if ( token.equals( "MRV" ) )
 				var_sh = "MinimumRemainingValue";
 
-			else if ( token == "DEG" )
+			else if ( token.equals( "DEG" ) )
 				var_sh = "Degree";
 
-			else if ( token == "MAD" )
+			else if ( token.equals( "MAD" ) )
 				var_sh = "MRVwithTieBreaker";
 
-			else if ( token == "LCV" )
+			else if ( token.equals( "LCV" ) )
 				val_sh = "LeastConstrainingValue";
 
-			else if ( token == "FC" )
+			else if ( token.equals( "FC" ) )
 				cc = "forwardChecking";
 
-			else if ( token == "NOR" )
+			else if ( token.equals( "NOR" ) )
 				cc = "norvigCheck";
 
 			else

@@ -9,7 +9,7 @@ import time
 class BTSolver:
 
     ######### Constructors Method #########
-    def __init__(self, gb, var_sh, val_sh, cc):
+    def __init__(self, gb, val_sh, var_sh, cc):
         self.network = ConstraintNetwork.ConstraintNetwork(gb)
         self.trail = Trail.masterTrailVariable
         self.hassolution = False
