@@ -59,32 +59,25 @@ int Constraint::getConflicts ( void )
 	return numConflicts;
 }
 
-bool Constraint::propagateConstraint ( void )
+bool Constraint::isConsistent ( void )
 {
-	for ( Variable* var:vars )
+	for ( Variable* var : vars )
 	{
 		if ( !var->isAssigned() )
 			continue;
 
-		int varAssignment = var->getAssignment();
 		for ( Variable* otherVar:vars )
 		{
 			if ( var == otherVar )
 				continue;
 
-			if ( otherVar->size() == 1 && otherVar->getAssignment() == varAssignment )
+			if ( otherVar->isAssigned()
+			     && otherVar->getAssignment() == var->getAssignment() )
 				return false;
-
-			if ( otherVar->size() == 1 )
-				otherVar->removeValueFromDomain( varAssignment );
 		}
 	}
-	return true;
-}
 
-bool Constraint::isConsistent ( void )
-{
-	return propagateConstraint();
+	return true;
 }
 
 bool Constraint::operator== ( const Constraint &other ) const

@@ -5,8 +5,8 @@
 #include "Domain.hpp"
 #include "Variable.hpp"
 #include "ConstraintNetwork.hpp"
+#include "Trail.hpp"
 
-#include <stack>
 #include <utility>
 #include <iostream>
 #include <vector>
@@ -15,7 +15,7 @@ class BTSolver
 {
 public:
 	// Constructor
-	BTSolver ( SudokuBoard board, std::string val_sh, std::string var_sh, std::string cc );
+	BTSolver ( SudokuBoard board, Trail* trail, std::string val_sh, std::string var_sh, std::string cc );
 
 	// Consistency Checks (Implement these)
 	bool assignmentsCheck ( void );
@@ -46,10 +46,10 @@ public:
 
 private:
 	ConstraintNetwork network;
-	std::stack<std::pair<Variable*, Domain> > trail;
-	std::stack<int> breadcrumbs;
-	bool hasSolution = false;
 	SudokuBoard sudokuGrid;
+	Trail* trail;
+
+	bool hasSolution = false;
 
 	std::string varHeuristics;
 	std::string valHeuristics;

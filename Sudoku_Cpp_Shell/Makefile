@@ -23,6 +23,7 @@ RAW_SOURCES = \
 	Domain.cpp\
 	Main.cpp\
 	SudokuBoard.cpp\
+	Trail.cpp\
 	Variable.cpp
 
 SOURCE_DIR = src

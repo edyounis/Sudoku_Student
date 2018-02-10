@@ -1,5 +1,6 @@
 #include "BTSolver.hpp"
 #include "SudokuBoard.hpp"
+#include "Trail.hpp"
 
 #include <iostream>
 #include <ctime>
@@ -10,6 +11,12 @@
 #include <unistd.h>
 
 using namespace std;
+
+/**
+ * Main driver file, which is responsible for interfacing with the
+ * command line and properly starting the backtrack solver.
+ */
+
 int main ( int argc, char *argv[] )
 {
 	// Set random seed
@@ -47,19 +54,26 @@ int main ( int argc, char *argv[] )
 			file = token;
 	}
 
+	Trail trail;
+
 	if ( file == "" )
 	{
 		SudokuBoard board( 3, 3, 7 );
 		cout << board.toString() << endl;
 
-		BTSolver solver = BTSolver( board, val_sh, var_sh, cc );
+		BTSolver solver = BTSolver( board, &trail, val_sh, var_sh, cc );
 		solver.solve();
 
 		if ( solver.haveSolution() )
+		{
 			cout << solver.getSolution().toString() << endl;
-
+			cout << "Assignments: " << trail.getPushCount() << endl;
+			cout << "Backtracks: "  << trail.getUndoCount() << endl;
+		}
 		else
+		{
 			cout << "Failed to find a solution" << endl;
+		}
 
 		return 0;
 	}
@@ -79,6 +93,7 @@ int main ( int argc, char *argv[] )
 
 		struct dirent *ent;
 
+		int numSolutions = 0;
 		while ( ( ent = readdir (dir) ) != NULL )
 		{
 			if ( ent->d_name[0] == '.' )
@@ -91,16 +106,18 @@ int main ( int argc, char *argv[] )
 
 			SudokuBoard board( individualFile );
 
-			BTSolver solver = BTSolver( board, val_sh, var_sh, cc );
+			BTSolver solver = BTSolver( board, &trail, val_sh, var_sh, cc );
 			solver.solve();
 
 			if ( solver.haveSolution() )
-				cout << solver.getSolution().toString() << endl;
+				numSolutions++;
 
-			else
-				cout << "Failed to find a solution" << endl;
+			trail.clear();
 		}
 
+		cout << "Solutions Found: " << numSolutions << endl;
+		cout << "Assignments: " << trail.getPushCount() << endl;
+		cout << "Backtracks: "  << trail.getUndoCount() << endl;
 		closedir (dir);
 
 		return 0;
@@ -109,14 +126,19 @@ int main ( int argc, char *argv[] )
 	SudokuBoard board( file );
 	cout << board.toString() << endl;
 
-	BTSolver solver = BTSolver( board, val_sh, var_sh, cc );
+	BTSolver solver = BTSolver( board, &trail, val_sh, var_sh, cc );
 	solver.solve();
 
 	if ( solver.haveSolution() )
+	{
 		cout << solver.getSolution().toString() << endl;
-
+		cout << "Assignments: " << trail.getPushCount() << endl;
+		cout << "Backtracks: "  << trail.getUndoCount() << endl;
+	}
 	else
+	{
 		cout << "Failed to find a solution" << endl;
+	}
 
 	return 0;
 }
