@@ -10,7 +10,7 @@ public class BTSolver
 	//===============================================================================
 
 	private ConstraintNetwork network;
-	private static Trail trail = Trail.getTrail();
+	private Trail trail;
 	private boolean hasSolution = false;
 	private SudokuBoard sudokuGrid;
 
@@ -22,48 +22,61 @@ public class BTSolver
 	// Constructors
 	//===============================================================================
 
-	public BTSolver ( SudokuBoard sboard, String val_sh, String var_sh, String cc )
+	public BTSolver ( SudokuBoard sboard, Trail trail, String val_sh, String var_sh, String cc )
 	{
-		this.network = new ConstraintNetwork( sboard );
+		this.network    = new ConstraintNetwork( sboard );
 		this.sudokuGrid = sboard;
+		this.trail      = trail;
+
 		varHeuristics = var_sh;
 		valHeuristics = val_sh;
 		cChecks       = cc;
 	}
 
-	//===============================================================================
-	// Implement Unfinished Methods Here
-	//===============================================================================
+	// =================================================================
+	// Consistency Checks
+	// =================================================================
 
+	// Basic consistency check, no propagation done
 	private boolean assignmentsCheck()
 	{
-		for ( Variable v : network.getVariables() )
+		for ( Constraint c : network.getConstraints() )
 		{
-			if ( v.isAssigned() )
+			if ( ! c.isConsistent() )
 			{
-				for ( Variable vOther : network.getNeighborsOfVariable(v) )
-				{
-					if ( v.getAssignment() == vOther.getAssignment() )
-					{
-						return false;
-					}
-				}
+				return false;
 			}
 		}
-
 		return true;
 	}
 
+	/**
+	 * Part 1 TODO: Implement the Forward Checking Heuristic
+	 *
+	 * Note: remember to trail.push variables before you assign them
+	 * Return: true is assignment is consistent, false otherwise
+	 */
 	private boolean forwardChecking()
 	{
 		return false;
 	}
 
+	/**
+	 * Part 2 TODO: Implement both of Norvig's Heuristics
+	 *
+	 * Note: remember to trail.push variables before you assign them
+	 * Return: true is assignment is consistent, false otherwise
+	 */
 	private boolean norvigCheck()
 	{
 		return false;
 	}
 
+	// =================================================================
+	// Variable Selectors
+	// =================================================================
+
+	// Basic variable selector, returns first unassigned variable
 	private Variable getfirstUnassignedVariable()
 	{
 		for ( Variable v : network.getVariables() )
@@ -76,21 +89,43 @@ public class BTSolver
 		return null;
 	}
 
+	/**
+	 * Part 1 TODO: Implement the Minimum Remaining Value Heuristic
+	 *
+	 * Return: The unassigned variable with the smallest domain
+	 */
 	private Variable getMRV()
 	{
 		return null;
 	}
 
+	/**
+	 * Part 2 TODO: Implement the Degree Heuristic
+	 *
+	 * Return: The unassigned variable involved in the most constraints
+	 */
 	private Variable getDegree()
 	{
 		return null;
 	}
 
+	/**
+	 * Part 2 TODO: Implement the Minimum Remaining Value Heuristic
+	 *                with Degree Heuristic as a Tie Breaker
+	 *
+	 * Return: The unassigned variable with the smallest domain and involved
+	 *             in the most constraints
+	 */
 	private Variable MRVwithTieBreaker()
 	{
 		return null;
 	}
 
+	// =================================================================
+	// Variable Selectors
+	// =================================================================
+
+	// Default Value Ordering
 	public List<Integer> getValuesInOrder ( Variable v )
 	{
 		List<Integer> values = v.getDomain().getValues();
@@ -106,36 +141,19 @@ public class BTSolver
 		return values;
 	}
 
+	/**
+	 * Part 1 TODO: Implement the Least Constraining Value Heuristic
+	 *
+	 * Return: A list of v's domain sorted by the LCV heuristic
+	 */
 	public List<Integer> getValuesLCVOrder ( Variable v )
 	{
 		return null;
 	}
 
-	//===============================================================================
-	// Accessors
-	//===============================================================================
-
-	public boolean hasSolution()
-	{
-		return hasSolution;
-	}
-
-	/**
-	 * @return solution if a solution has been found, otherwise returns the unsolved puzzle.
-	 */
-	public SudokuBoard getSolution()
-	{
-		return network.toSudokuBoard ( sudokuGrid.getP(), sudokuGrid.getQ() );
-	}
-
-	public ConstraintNetwork getNetwork()
-	{
-		return network;
-	}
-
-	//===============================================================================
+	//==================================================================
 	// Engine Functions
-	//===============================================================================
+	//==================================================================
 
 	/**
 	 * Method to start the solver
@@ -143,15 +161,9 @@ public class BTSolver
 	public void solve()
 	{
 		solve ( 0 );
-		Trail.clearTrail();
 	}
 
-	/**
-	 * Solver
-	 * @param level How deep the solver is in its recursion.
-	 * @throws VariableSelectionException
-	 */
-	private void solve(int level)
+	private void solve ( int level )
 	{
 		if ( hasSolution )
 			return;
@@ -167,6 +179,7 @@ public class BTSolver
 				if ( !var.isAssigned() )
 				{
 					System.out.println( "Error" );
+					return;
 				}
 			}
 
@@ -176,18 +189,18 @@ public class BTSolver
 		}
 
 		// Attempt to assign a value
-		for ( Integer i : getNextValues(v) )
+		for ( Integer i : getNextValues( v ) )
 		{
-			trail.placeBreadCrumb();
+			// Store place in trail and push variable's state on trail
+			trail.placeTrailMarker();
+			trail.push(v);
 
-			// Check a value
-			v.updateDomain(new Domain(i));
+			// Assign the value
+			v.assignValue( i );
 
-			// Move to the next assignment
+			// Propagate constraints, check consistency, recurse
 			if ( checkConsistency() )
-			{
 				solve ( level + 1 );
-			}
 
 			// If this assignment succeeded, return
 			if ( hasSolution )
@@ -241,5 +254,20 @@ public class BTSolver
 			default:
 				return getValuesInOrder(v);
 		}
+	}
+
+	public boolean hasSolution()
+	{
+		return hasSolution;
+	}
+
+	public SudokuBoard getSolution()
+	{
+		return network.toSudokuBoard ( sudokuGrid.getP(), sudokuGrid.getQ() );
+	}
+
+	public ConstraintNetwork getNetwork()
+	{
+		return network;
 	}
 }

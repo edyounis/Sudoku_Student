@@ -39,19 +39,26 @@ public class Main
 				file = token;
 		}
 
+		Trail trail = new Trail();
+
 		if ( file == "" )
 		{
 			SudokuBoard board = new SudokuBoard( 3, 3, 7 );
 			System.out.println( board.toString() );
 
-			BTSolver solver = new BTSolver( board, val_sh, var_sh, cc );
+			BTSolver solver = new BTSolver( board, trail, val_sh, var_sh, cc );
 			solver.solve();
 
 			if ( solver.hasSolution() )
+			{
 				System.out.println( solver.getSolution().toString() );
-
+				System.out.println( "Assignments: " + trail.getPushCount() );
+				System.out.println( "Backtracks: " + trail.getUndoCount() );
+			}
 			else
+			{
 				System.out.println( "Failed to find a solution" );
+			}
 
 			return;
 		}
@@ -70,35 +77,43 @@ public class Main
 				return;
 			}
 
+			int numSolutions = 0;
 			for ( int i = 0; i < listOfBoards.length; ++i )
 			{
 				System.out.println ( "Running board: " + listOfBoards[i] );
 
 				SudokuBoard board = new SudokuBoard( listOfBoards[i] );
 
-				BTSolver solver = new BTSolver( board, val_sh, var_sh, cc );
+				BTSolver solver = new BTSolver( board, trail, val_sh, var_sh, cc );
 				solver.solve();
 
 				if ( solver.hasSolution() )
-					System.out.println( solver.getSolution().toString() );
+					numSolutions++;
 
-				else
-					System.out.println( "Failed to find a solution" );
+				trail.clear();
 			}
 
+			System.out.println( "Solutions Found: " + numSolutions );
+			System.out.println( "Assignments: " + trail.getPushCount() );
+			System.out.println( "Backtracks: "  + trail.getUndoCount() );
 			return;
 		}
 
 		SudokuBoard board = new SudokuBoard( location );
 		System.out.println( board.toString() );
 
-		BTSolver solver = new BTSolver( board, val_sh, var_sh, cc );
+		BTSolver solver = new BTSolver( board, trail, val_sh, var_sh, cc );
 		solver.solve();
 
 		if ( solver.hasSolution() )
+		{
 			System.out.println( solver.getSolution().toString() );
-
+			System.out.println( "Assignments: " + trail.getPushCount() );
+			System.out.println( "Backtracks: " + trail.getUndoCount() );
+		}
 		else
+		{
 			System.out.println( "Failed to find a solution" );
+		}
 	}
 }

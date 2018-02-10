@@ -13,7 +13,6 @@ public class Variable implements Iterable<Integer>
 	private boolean modified;
 	private boolean unchangeable;
 	private String name;
-	private static Trail trail = Trail.getTrail();
 
 	private int oldSize;
 
@@ -138,7 +137,7 @@ public class Variable implements Iterable<Integer>
 	 */
 	public void assignValue ( int val )
 	{
-		setDomain(new Domain(val));
+		setDomain( new Domain( val ) );
 	}
 
 	/**
@@ -147,9 +146,7 @@ public class Variable implements Iterable<Integer>
 	 */
 	public void updateDomain ( Domain d )
 	{
-		methodModifiesDomain();
-
-		if(!domain.equals(d))
+		if ( ! domain.equals( d ) )
 		{
 			domain = d;
 			modified = true;
@@ -162,7 +159,7 @@ public class Variable implements Iterable<Integer>
 	 */
 	public void setDomain ( Domain d )
 	{
-		if(!domain.equals(d))
+		if ( ! domain.equals( d ) )
 		{
 			domain = d;
 			modified = true;
@@ -175,24 +172,8 @@ public class Variable implements Iterable<Integer>
 	 */
 	public void removeValueFromDomain ( int val )
 	{
-		methodModifiesDomain();
-		domain.remove(val);
-		this.modified=domain.isModified();
-	}
-
-	//===============================================================================
-	// Helper Methods
-	//===============================================================================
-
-	public void methodModifiesDomain()
-	{
-		int newSize = size();
-		if (oldSize > newSize)
-		{
-			oldSize = newSize;
-		}
-
-		trail.push(this);
+		domain.remove( val );
+		this.modified = domain.isModified();
 	}
 
 	//===============================================================================

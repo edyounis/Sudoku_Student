@@ -16,7 +16,6 @@
 # ======================================================================
 
 RAW_SOURCES = \
-	Assignment.java\
 	Main.java\
 	BTSolver.java\
 	Constraint.java\

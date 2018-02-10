@@ -72,64 +72,35 @@ public class Constraint
 			for ( Variable otherVar : vars )
 			{
 				if ( var.equals(otherVar) )
-				{
 					continue;
-				}
-				else if ( var.getAssignment().equals(otherVar.getAssignment()) )
-				{
+
+				if ( var.getAssignment().equals(otherVar.getAssignment()) )
 					numConflicts++;
-				}
 			}
 		}
 
 		return numConflicts;
 	}
 
-	//===============================================================================
-	// Modifiers
-	//===============================================================================
-
-	/**
-	 * Attempts to propagate the notequal constraint through the variables in
-	 * the constraint. If it fails to do so, the propagation stops midway
-	 * and does not reset the changes to the domains of the variables made
-	 * so far.
-	 * @return true if the constraint is consistent and propagation succeeds,
-	 * false otherwise
-	 */
-	public boolean propagateConstraint()
+	public boolean isConsistent()
 	{
-		//compares assignments and determines if the assigment breaks the constraints
 		for ( Variable var : vars )
 		{
-			if ( !var.isAssigned() )
+			if ( ! var.isAssigned() )
 				continue;
-
-			Integer varAssignment = var.getAssignment();
 
 			for ( Variable otherVar : vars )
 			{
-				if ( var.equals(otherVar) )
-				{
+				if ( var.equals( otherVar ) )
 					continue;
-				}
-				if ( otherVar.size() == 1 && otherVar.getAssignment() == varAssignment )
-				{
+
+				if ( otherVar.isAssigned()
+				     && otherVar.getAssignment() == var.getAssignment() )
 					return false;
-				}
-				otherVar.removeValueFromDomain(varAssignment);
 			}
 		}
-		return true;
-	}
 
-	/**
-	 * Used for local search. Same as propagate constraint.
-	 * @return true if constraint is consistent, false otherwise.
-	 */
-	public boolean isConsistent()
-	{
-		return propagateConstraint();
+		return true;
 	}
 
 	//===============================================================================

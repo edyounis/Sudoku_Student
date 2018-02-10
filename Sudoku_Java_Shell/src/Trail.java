@@ -12,71 +12,86 @@ public class Trail
 	// Properties
 	//===============================================================================
 
-	private static Stack<Object[]> trail = new Stack<Object[]>();
-	private static final Trail TRAIL = new Trail();
-	private static Stack<Integer> breadcrumbs = new Stack<Integer>();
-	private Trail()
-	{}
+	private Stack<Object[]> trailStack  = new Stack<Object[]>();
+	private Stack<Integer>  trailMarker = new Stack<Integer>();
 
-	/**
-	 * returns the trail.
-	 * @return
-	 */
-	public static Trail getTrail()
+	private static int numPush = 0;
+	private static int numUndo = 0;
+
+	//===============================================================================
+	// Constructor
+	//===============================================================================
+
+	public Trail ( )
 	{
-		return TRAIL;
 	}
 
-	public static void clearTrail()
-	{
-		trail.clear();
-	}
 	//===============================================================================
 	// Accessors
 	//===============================================================================
 
-	public int size()
+	public int size ( )
 	{
-		return trail.size();
+		return trailStack.size();
+	}
+
+	public static int getPushCount ( )
+	{
+		return numPush;
+	}
+
+	public static int getUndoCount ( )
+	{
+		return numUndo;
 	}
 
 	//===============================================================================
 	// Modifiers
 	//===============================================================================
 
-	/**
-	 * places a marker at the current point in the trail. Each time undo is called, the
-	 * latest marker is popped and the trail
-	 */
-	public void placeBreadCrumb()
+	public void placeTrailMarker ( )
 	{
-		breadcrumbs.add(trail.size());
-	}
-	/**
-	 * Adds a deep copy of a variable and its domain onto the trail.
-	 * @param v Variable to copy onto the trail
-	 */
-	public void push(Variable v)
-	{
-		Object[] vPair = { v, new Domain(v.getDomain())};
-		trail.push(vPair);
+		trailMarker.add( trailStack.size() );
 	}
 
 	/**
-	 * Pops changes pushed onto the trail until it reaches the latest marker.
-	 * Also pops the latest marker.
-	 * @param targetSize target position on the trail to backtrack to
-	 * @throws EmptyStackException if trail is empty
+	 * Before you assign a variable in constraint propagation,
+	 * use this function to save its initial domain on the
+	 * backtrack trail. This way if the path you are on fails,
+	 * you can restore propagated domains correctly.
+	 * @param v Variable to copy onto the trail
 	 */
-	public void undo() throws EmptyStackException
+
+	public void push ( Variable v )
 	{
-		int targetSize = breadcrumbs.pop();
-		for (int size = trail.size(); size > targetSize; size--)
+		numPush++;
+		Object[] vPair = { v, new Domain(v.getDomain())};
+		trailStack.push( vPair );
+	}
+
+	public void undo ( )
+	{
+		numUndo++;
+		try
 		{
-			Object[] vPair = trail.pop();
-			Variable v = (Variable) vPair[0];
-			v.setDomain((Domain) vPair[1]);
+			int targetSize = trailMarker.pop();
+			for ( int size = trailStack.size(); size > targetSize; --size )
+			{
+				Object[] vPair = trailStack.pop();
+				Variable v = (Variable) vPair[0];
+				v.setDomain((Domain) vPair[1]);
+			}
 		}
+		catch ( EmptyStackException e )
+		{
+			clear();
+		}
+	}
+
+	public void clear ( )
+	{
+		trailStack.clear();
+		trailMarker.clear();
 	}
 }
 
