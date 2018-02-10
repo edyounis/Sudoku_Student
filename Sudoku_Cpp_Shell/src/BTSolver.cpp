@@ -2,7 +2,7 @@
 
 using namespace std;
 
-BTSolver::BTSolver ( SudokuBoard input, std::string val_sh, std::string var_sh, std::string cc )
+BTSolver::BTSolver ( SudokuBoard input, string val_sh, string var_sh, string cc )
 : sudokuGrid( input.get_p(), input.get_q(), input.get_board() ), network( input )
 {
 	valHeuristics = val_sh;
@@ -74,15 +74,15 @@ Variable* BTSolver::MRVwithTieBreaker ( void )
 	return nullptr;
 }
 
-std::vector<int> BTSolver::getValuesInOrder ( Variable* v )
+vector<int> BTSolver::getValuesInOrder ( Variable* v )
 {
 	return v->getDomain().getValues();
 }
 
 // Implement This
-std::vector<int> BTSolver::LeastConstrainingValue ( Variable* v )
+vector<int> BTSolver::LeastConstrainingValue ( Variable* v )
 {
-	return std::vector<int>();
+	return vector<int>();
 }
 
 void BTSolver::solve ( int level )
@@ -100,7 +100,7 @@ void BTSolver::solve ( int level )
 			// If all variables haven't been assigned
 			if ( !var->isAssigned() )
 			{
-				std::cout << "Error" << std::endl;
+				cout << "Error" << endl;
 				return;
 			}
 		}
@@ -113,7 +113,8 @@ void BTSolver::solve ( int level )
 	// Attempt to assign a value
 	for ( int i : getNextValues( v ) )
 	{
-		trail.push(std::pair<Variable*, Domain>(v,v->getDomain()));
+		breadcrumbs.push( trail.size() );
+		trail.push( pair<Variable*, Domain>( v, v->getDomain() ) );
 		v->assignValue( i );
 
 		if ( checkConsistency() )
@@ -123,9 +124,15 @@ void BTSolver::solve ( int level )
 			return;
 
 		// Backtrack
-		std::pair<Variable*, Domain> vPair = trail.top();
-		trail.pop();
-		vPair.first->setDomain(vPair.second);
+		int targetSize = breadcrumbs.top();
+		breadcrumbs.pop();
+		for ( int size = trail.size(); size > targetSize; --size )
+		{
+			pair<Variable*, Domain> vPair = trail.top();
+			trail.pop();
+			v = vPair.first;
+			v->setDomain(vPair.second);
+		}
 	}
 }
 
@@ -154,7 +161,7 @@ Variable* BTSolver::selectNextVariable ( void )
 	return getfirstUnassignedVariable();
 }
 
-std::vector<int> BTSolver::getNextValues ( Variable* v )
+vector<int> BTSolver::getNextValues ( Variable* v )
 {
 	if ( valHeuristics == "LeastConstrainingValue" )
 		return LeastConstrainingValue(v);

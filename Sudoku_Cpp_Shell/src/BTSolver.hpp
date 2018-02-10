@@ -47,6 +47,7 @@ public:
 private:
 	ConstraintNetwork network;
 	std::stack<std::pair<Variable*, Domain> > trail;
+	std::stack<int> breadcrumbs;
 	bool hasSolution = false;
 	SudokuBoard sudokuGrid;
 
