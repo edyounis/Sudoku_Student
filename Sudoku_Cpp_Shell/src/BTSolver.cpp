@@ -153,7 +153,7 @@ vector<int> BTSolver::getValuesInOrder ( Variable* v )
 /**
  * Part 1 TODO: Implement the Least Constraining Value Heuristic
  *
- * The Least constraining value is the one that will knock the most
+ * The Least constraining value is the one that will knock the least
  * values out of it's neighbors domain.
  *
  * Return: A list of v's domain sorted by the LCV heuristic
@@ -165,13 +165,10 @@ vector<int> BTSolver::getValuesLCVOrder ( Variable* v )
 }
 
 /**
- * Part 1 TODO: Implement the Least Constraining Value Heuristic
+ * Optional TODO: Implement your own advanced Value Heuristic
  *
- * The Least constraining value is the one that will knock the most
- * values out of it's neighbors domain.
- *
- * Return: A list of v's domain sorted by the LCV heuristic
- *         The LCV is first and the MCV is last
+ * Completing the three tourn heuristic will automatically enter
+ * your program into a tournament.
  */
 vector<int> BTSolver::getTournVal ( Variable* v )
 {

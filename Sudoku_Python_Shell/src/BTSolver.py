@@ -135,7 +135,7 @@ class BTSolver:
     """
         Part 1 TODO: Implement the Least Constraining Value Heuristic
 
-        The Least constraining value is the one that will knock the most
+        The Least constraining value is the one that will knock the least
         values out of it's neighbors domain.
 
         Return: A list of v's domain sorted by the LCV heuristic
