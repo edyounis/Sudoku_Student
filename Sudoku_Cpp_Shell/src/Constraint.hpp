@@ -8,6 +8,11 @@
 #include <sstream>
 #include <algorithm>
 
+/**
+ * Constraint represents a NotEquals constraint on a set of variables.
+ * Used to ensure none of the variables contained in the constraint have the same assignment.
+ */
+
 class Constraint
 {
 public:
@@ -28,11 +33,11 @@ public:
 	int  size         ( void );
 	bool contains     ( Variable* v );
 	bool isModified   ( void );
-	int  getConflicts ( void );
 	bool isConsistent ( void );
 
 	bool operator== ( const Constraint &other ) const;
 
+	// String representation
 	std::string toString ( void );
 };
 

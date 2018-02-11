@@ -16,7 +16,6 @@
 # ======================================================================
 
 RAW_SOURCES = \
-	Assignment.cpp\
 	BTSolver.cpp\
 	Constraint.cpp\
 	ConstraintNetwork.cpp\

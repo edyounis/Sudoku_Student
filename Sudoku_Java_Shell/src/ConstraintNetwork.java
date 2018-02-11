@@ -4,23 +4,23 @@ import java.util.Map.*;
 /**
  * CSP representation of the problem. Contains the variables, constraints, and
  * many helpful accessors.
- *
  */
+
 public class ConstraintNetwork
 {
 
-	//===============================================================================
+	// =================================================================
 	// Properties
-	//===============================================================================
+	// =================================================================
 
 	private List<Constraint> constraints;
 	private List<Variable> variables;
 
-	//===============================================================================
-	// Constructor
-	//===============================================================================
+	// =================================================================
+	// Constructors
+	// =================================================================
 
-	public ConstraintNetwork()
+	public ConstraintNetwork ( )
 	{
 		variables = new ArrayList<Variable>();
 		constraints = new ArrayList<Constraint>();
@@ -126,85 +126,76 @@ public class ConstraintNetwork
 		}
 	}
 
-	//===============================================================================
+	// =================================================================
 	// Modifiers
-	//===============================================================================
+	// =================================================================
 
-	public void add(Constraint c)
+	public void add ( Constraint c )
 	{
-		if ( !constraints.contains(c) )
+		if ( ! constraints.contains( c ) )
 		{
-			constraints.add(c);
+			constraints.add( c );
 		}
 	}
 
 	public void add ( Variable v )
 	{
-		if( !variables.contains(v) )
+		if ( ! variables.contains( v ) )
 		{
-			variables.add(v);
+			variables.add( v );
 		}
 	}
 
-	//===============================================================================
+	// =================================================================
 	// Accessors
-	//===============================================================================
+	// =================================================================
 
-	public List<Constraint> getConstraints()
+	public List<Constraint> getConstraints ( )
 	{
 		return constraints;
 	}
 
-	public List<Variable> getVariables()
+	public List<Variable> getVariables ( )
 	{
 		return variables;
 	}
 
+	// Returns all variables that share a constraint with v
 	public List<Variable> getNeighborsOfVariable ( Variable v )
 	{
 		Set<Variable> neighbors = new HashSet<Variable>();
 
-		for(Constraint c : constraints)
+		for ( Constraint c : constraints )
 		{
-			if(c.contains(v))
+			if ( c.contains( v ) )
 			{
-				neighbors.addAll(c.vars);
+				neighbors.addAll( c.vars );
 			}
 		}
-		neighbors.remove(v);
-		return new ArrayList<Variable>(neighbors);
+
+		neighbors.remove( v );
+		return new ArrayList<Variable>( neighbors );
 	}
 
-	/**
-	 * Used for local search. Determines if the current assignment is consistent.
-	 * @return
-	 */
-	public boolean isConsistent()
+	// Returns true is every constraint is consistent
+	public boolean isConsistent ( )
 	{
-		for (Constraint c : constraints)
-		{
-			if (!c.isConsistent())
-			{
+		for ( Constraint c : constraints )
+			if ( ! c.isConsistent() )
 				return false;
-			}
-		}
+
 		return true;
 	}
 
-	/**
-	 * @param v variable to check
-	 * @return list of constraints that contains v
-	 */
+	// Returns a list of constraints that contains v
 	public List<Constraint> getConstraintsContainingVariable ( Variable v )
 	{
 		List<Constraint> outList = new ArrayList<Constraint>();
+
 		for ( Constraint c : constraints )
-		{
-			if(c.contains(v))
-			{
-				outList.add(c);
-			}
-		}
+			if ( c.contains( v ) )
+				outList.add( c );
+
 		return outList;
 	}
 
@@ -217,57 +208,50 @@ public class ConstraintNetwork
 	 *
 	 * Note* The first call to this method returns the constraints containing
 	 * the initialized variables.
-	 *
-	 * @return ArrayList of modified constraints
 	 */
-	public List<Constraint> getModifiedConstraints()
+	public List<Constraint> getModifiedConstraints ( )
 	{
 		List<Constraint> mConstraints = new ArrayList<Constraint>();
 
 		for ( Constraint c : constraints )
-		{
-			if (c.isModified())
-			{
-				mConstraints.add(c);
-			}
-		}
+			if ( c.isModified() )
+				mConstraints.add( c );
 
 		for ( Variable v : getVariables() )
-		{
-			v.setModified(false);
-		}
+			v.setModified( false );
+
 		return mConstraints;
 	}
 
-	//===============================================================================
+	// =================================================================
 	// String Representation
-	//===============================================================================
+	// =================================================================
 
-	public String toString()
+	public String toString ( )
 	{
 		StringBuilder sb = new StringBuilder();
-		sb.append(variables.size() + " Variables: {");
+		sb.append( variables.size() + " Variables: {" );
 		String delim = "";
 
-		for (Variable v : variables)
+		for ( Variable v : variables )
 		{
-			sb.append(delim).append(v.getName());
+			sb.append( delim ).append( v.getName() );
 			delim = ",";
 		}
-		sb.append("}");
+		sb.append( "}" );
 
-		sb.append("\n" + constraints.size() + " Constraints:");
+		sb.append( "\n" + constraints.size() + " Constraints:" );
 		delim = "\n";
-		for (Constraint c: constraints)
+		for ( Constraint c : constraints )
 		{
-			sb.append(delim).append(c.toString());
+			sb.append( delim ).append( c.toString() );
 		}
 		return sb.toString();
 	}
 
-	//===============================================================================
+	// =================================================================
 	// Sudoku Board Representation
-	//===============================================================================
+	// =================================================================
 
 	public SudokuBoard toSudokuBoard ( int p, int q )
 	{

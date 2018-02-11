@@ -3,14 +3,13 @@ import java.util.Stack;
 
 /**
  * Represents the trail of changes made. This allows backtracking to occur.
- * Trail follows the singleton design pattern.
  */
+
 public class Trail
 {
-
-	//===============================================================================
+	// =================================================================
 	// Properties
-	//===============================================================================
+	// =================================================================
 
 	private Stack<Object[]> trailStack  = new Stack<Object[]>();
 	private Stack<Integer>  trailMarker = new Stack<Integer>();
@@ -18,17 +17,17 @@ public class Trail
 	private static int numPush = 0;
 	private static int numUndo = 0;
 
-	//===============================================================================
+	// =================================================================
 	// Constructor
-	//===============================================================================
+	// =================================================================
 
 	public Trail ( )
 	{
 	}
 
-	//===============================================================================
+	// =================================================================
 	// Accessors
-	//===============================================================================
+	// =================================================================
 
 	public int size ( )
 	{
@@ -45,10 +44,11 @@ public class Trail
 		return numUndo;
 	}
 
-	//===============================================================================
+	// =================================================================
 	// Modifiers
-	//===============================================================================
+	// =================================================================
 
+	// Places a marker in the trail
 	public void placeTrailMarker ( )
 	{
 		trailMarker.add( trailStack.size() );
@@ -59,16 +59,16 @@ public class Trail
 	 * use this function to save its initial domain on the
 	 * backtrack trail. This way if the path you are on fails,
 	 * you can restore propagated domains correctly.
-	 * @param v Variable to copy onto the trail
 	 */
 
 	public void push ( Variable v )
 	{
 		numPush++;
-		Object[] vPair = { v, new Domain(v.getDomain())};
+		Object[] vPair = { v, new Domain( v.getDomain() )};
 		trailStack.push( vPair );
 	}
 
+	// Pops and restores variables on the trail until the last trail marker
 	public void undo ( )
 	{
 		numUndo++;
@@ -88,6 +88,7 @@ public class Trail
 		}
 	}
 
+	// Clears the trail
 	public void clear ( )
 	{
 		trailStack.clear();

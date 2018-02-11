@@ -8,6 +8,10 @@
 #include <utility>
 #include <iostream>
 
+/**
+ * Represents the trail of changes made. This allows backtracking to occur.
+ */
+
 class Trail
 {
 public:
@@ -21,7 +25,11 @@ public:
 	int getUndoCount ( void );
 
 	// Modifiers
+
+	// Places a marker in the trail
 	void placeTrailMarker ( void );
+
+	// Pops and restores variables on the trail until the last trail marker
 	void undo ( void );
 
 	/**
@@ -33,15 +41,16 @@ public:
 
 	void push ( Variable* v );
 
+	// Clears the trail
 	void clear ( void );
 
 private:
-
+	// Properties
 	std::stack<std::pair<Variable*, Domain> > trailStack;
 	std::stack<int> trailMarker;
 
-	int numPush;
-	int numUndo;
+	int numPush = 0;
+	int numUndo = 0;
 };
 
 #endif

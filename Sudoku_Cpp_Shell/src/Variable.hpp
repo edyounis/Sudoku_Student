@@ -11,24 +11,17 @@
 #include <iostream>
 #include <algorithm>
 
+/**
+ * Represents a variable in a CSP
+ */
+
 class Variable
 {
 public:
-	// Properties
-	Domain domain;
-	int r, c, b;
-	bool modified;
-	bool unchangeable;
-	std::string name;
-	int oldSize;
-	static int namingCounter;
 
 	// Constructors
 	Variable ( Domain::ValueSet possible_Values, int row, int col, int block );
 	Variable ( const Variable& v );
-
-	bool operator== ( const Variable &other ) const;
-	bool operator!= ( const Variable &other ) const;
 
 	// Accessors
 	bool isChangeable ( void ) const;
@@ -45,8 +38,10 @@ public:
 	std::string getName ( void ) const;
 	Domain::ValueSet getValues ( void ) const;
 
+	bool operator== ( const Variable &other ) const;
+	bool operator!= ( const Variable &other ) const;
+
 	// Modifiers
-	void modify ( const Variable& other );
 	void setModified ( bool modified );
 	void assignValue ( int val );
 	void updateDomain ( Domain d );
@@ -58,11 +53,18 @@ public:
 	Domain::iterator end();
 
 	// String Representation
-
 	std::string toString ( void );
 
 private:
-	void methodModifiesDomain ( void );
+
+	// Properties
+	Domain domain;
+	int r, c, b;
+	bool modified;
+	bool changeable;
+	std::string name;
+	int oldSize;
+	static int namingCounter;
 };
 
 #endif

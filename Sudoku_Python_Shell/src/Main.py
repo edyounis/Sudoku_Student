@@ -7,7 +7,13 @@ import SudokuBoard
 import Constraint
 import ConstraintNetwork
 import BTSolver
+import Trail
 import time
+
+"""
+	Main driver file, which is responsible for interfacing with the
+	command line and properly starting the backtrack solver.
+"""
 
 def main ( ):
     args = sys.argv
@@ -40,15 +46,19 @@ def main ( ):
         else:
             file = arg;
 
+    trail = Trail.Trail();
+
     if file == "":
         sudokudata = SudokuBoard.SudokuBoard( 3, 3, 7 )
         print(sudokudata)
 
-        solver = BTSolver.BTSolver( sudokudata, val_sh, var_sh, cc )
+        solver = BTSolver.BTSolver( sudokudata, trail, val_sh, var_sh, cc )
         solver.solve()
 
         if solver.hassolution:
             print( solver.getSolution() )
+            print( "Assignments: " + str(trail.getPushCount()) )
+            print( "Backtracks: " + str(trail.getUndoCount()) )
 
         else:
             print( "Failed to find a solution" )
@@ -64,29 +74,33 @@ def main ( ):
             print ( "[ERROR] Failed to open directory." )
             return
 
+        numSolutions = 0
         for f in listOfBoards:
-                print ( "Running board: " + str(f) )
-                sudokudata = SudokuBoard.SudokuBoard( filepath=f )
+            print ( "Running board: " + str(f) )
+            sudokudata = SudokuBoard.SudokuBoard( filepath=os.path.join( file, f ) )
 
-                solver = BTSolver.BTSolver( sudokudata, val_sh, var_sh, cc )
-                solver.solve()
+            solver = BTSolver.BTSolver( sudokudata, trail, val_sh, var_sh, cc )
+            solver.solve()
 
-                if solver.hassolution:
-                    print( solver.getSolution() )
+            if solver.hassolution:
+               	numSolutions += 1;
 
-                else:
-                    print( "Failed to find a solution" )
+        print ( "Solutions Found: " + str(numSolutions) )
+        print ( "Assignments: " + str(trail.getPushCount()) )
+        print ( "Backtracks: "  + str(trail.getUndoCount()) )
 
         return
 
-    sudokudata =  SudokuBoard.SudokuBoard( filepath=file )
+    sudokudata =  SudokuBoard.SudokuBoard( filepath=os.path.abspath( file ) )
     print(sudokudata)
 
-    solver = BTSolver.BTSolver( sudokudata, val_sh, var_sh, cc )
+    solver = BTSolver.BTSolver( sudokudata, trail, val_sh, var_sh, cc )
     solver.solve()
 
     if solver.hassolution:
         print( solver.getSolution() )
+        print( "Assignments: " + str(trail.getPushCount()) )
+        print( "Backtracks: " + str(trail.getUndoCount()) )
 
     else:
         print( "Failed to find a solution" )

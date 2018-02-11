@@ -1,13 +1,21 @@
 #include"Variable.hpp"
 
+/**
+ * Represents a variable in a CSP
+ */
+
 int Variable::namingCounter = 1;
+
+// =====================================================================
+// Constructors
+// =====================================================================
 
 Variable::Variable ( Domain::ValueSet possible_Values, int row, int col, int block ) : domain(possible_Values)
 {
 	if ( domain.size() == 1 )
 	{
 		modified = true;
-		unchangeable = true;
+		changeable = false;
 	}
 
 	r = row;
@@ -15,6 +23,7 @@ Variable::Variable ( Domain::ValueSet possible_Values, int row, int col, int blo
 	b = block;
 	name = "v" + std::to_string(namingCounter++);
 	oldSize = size();
+	changeable = true;
 }
 
 Variable::Variable ( const Variable& v ) : domain(v.domain)
@@ -24,48 +33,26 @@ Variable::Variable ( const Variable& v ) : domain(v.domain)
 	b = v.block();
 	modified = v.isModified();
 	name = v.getName();
+	changeable = v.isChangeable();
 }
 
-void Variable::modify ( const Variable& other )
-{
-	r = other.row();
-	c = other.col();
-	b = other.block();
-	modified = other.isModified();
-	name = other.getName();
-	domain = other.getDomain();
-	oldSize = other.oldSize;
-}
-
-bool Variable::operator== ( const Variable &other ) const
-{
-	return (row() == other.row()) && (col() == other.col()) && (block() == other.block());
-}
-
-bool Variable::operator!= ( const Variable &other ) const
-{
-	return !(*this == other);
-}
+// =====================================================================
+// Accessors
+// =====================================================================
 
 bool Variable::isChangeable( void ) const
 {
-	return domain.size() != 1;
+	return changeable;
 }
 
 bool Variable::isAssigned( void ) const
 {
-	return size() == 1 ? true : false;
+	return size() == 1;
 }
 
 bool Variable::isModified( void ) const
 {
 	return modified;
-}
-
-void Variable::setModified( bool modified )
-{
-	this->modified = modified;
-	this->domain.setModified(modified);
 }
 
 int Variable::row ( void ) const
@@ -83,28 +70,18 @@ int Variable::block ( void ) const
 	return b;
 }
 
-int Variable::getAssignment ( void ) const
-{
-	if ( !isAssigned() )
-	{
-		return 0;
-	}
-	else
-	{
-		if ( domain.getValues().size() != 1 )
-			std::cout << "ERROR!" << std::endl;
-		return domain.getValues()[0];
-	}
-}
-
-Domain::ValueSet Variable::getValues ( void ) const
-{
-	return domain.getValues();
-}
-
 int Variable::size ( void ) const
 {
 	return domain.size();
+}
+
+// Returns the assigned value or 0 if unassigned
+int Variable::getAssignment ( void ) const
+{
+	if ( isAssigned() )
+		return domain.getValues()[0];
+
+	return 0;
 }
 
 Domain Variable::getDomain ( void ) const
@@ -117,41 +94,66 @@ std::string Variable::getName ( void ) const
 	return name;
 }
 
+Domain::ValueSet Variable::getValues ( void ) const
+{
+	return domain.getValues();
+}
+
+bool Variable::operator== ( const Variable &other ) const
+{
+	return (row() == other.row()) && (col() == other.col()) && (block() == other.block());
+}
+
+bool Variable::operator!= ( const Variable &other ) const
+{
+	return !(*this == other);
+}
+
+// =====================================================================
+// Modifiers
+// =====================================================================
+
+void Variable::setModified( bool modified )
+{
+	if ( ! changeable )
+		return;
+
+	this->modified = modified;
+	this->domain.setModified(modified);
+}
+
+// Assign a value to the variable
 void Variable::assignValue ( int val )
 {
-	setDomain(Domain(val));
+	if ( ! changeable )
+		return;
+
+	setDomain( Domain( val ) );
 }
 
-void Variable::updateDomain ( Domain d )
-{
-	methodModifiesDomain();
-
-	domain = d;
-	modified = true;
-}
-
+// Sets the domain of the variable
 void Variable::setDomain ( Domain d )
 {
+	if ( ! changeable )
+		return;
+
 	domain = d;
 	modified = true;
 }
 
+// Removes a value from the domain
 void Variable::removeValueFromDomain ( int val )
 {
-	methodModifiesDomain();
+	if ( ! changeable )
+		return;
+
 	domain.remove(val);
 	modified = domain.isModified();
 }
 
-void Variable::methodModifiesDomain ( void )
-{
-	int newSize = size();
-
-	if (oldSize > newSize)
-	{
-		oldSize = newSize;
-	}
-}
+// =====================================================================
+// Iterator
+// =====================================================================
 
 Domain::iterator Variable::begin()
 {
@@ -163,6 +165,10 @@ Domain::iterator Variable::end()
 	return domain.end();
 }
 
+// =====================================================================
+// String representation
+// =====================================================================
+
 std::string Variable::toString()
 {
 	std::stringstream ss;
@@ -172,10 +178,10 @@ std::string Variable::toString()
 
 	for ( int i = 0; i < domain.getValues().size(); ++i )
 	{
-		ss<<sep<<domain.getValues()[i];
+		ss << sep << domain.getValues()[i];
 		sep = ",";
 	}
 
-	ss<<"}";
+	ss << "}";
 	return ss.str();
 }

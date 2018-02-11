@@ -9,6 +9,11 @@
 #include <iostream>
 #include <algorithm>
 
+/**
+ * Represents the domain of a variable, i.e. the possible values that each
+ * variable may assign.
+ */
+
 class Domain
 {
 public:
@@ -16,13 +21,9 @@ public:
 	typedef std::vector< int > ValueSet;
 	typedef ValueSet::iterator iterator;
 
-	// Constructs a domain with a single value
+	// Constructors
 	Domain ( int value );
-
-	// Constructs a domain with many values
 	Domain ( ValueSet values );
-
-	// Copy Constructor
 	Domain ( const Domain& d );
 
 	// Accessors
@@ -34,9 +35,9 @@ public:
 	bool     equals     ( Domain d )  const;
 
 	// Modifiers
+	void add         ( int value );
 	bool remove      ( int value );
 	void setModified ( bool modified );
-
 
 	// Iterator
 	ValueSet::iterator begin();
@@ -46,6 +47,7 @@ public:
 	std::string toString ( void ) const;
 
 private:
+	// Properties
 	ValueSet values;
 	bool modified;
 };

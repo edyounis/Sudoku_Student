@@ -1,38 +1,43 @@
 import java.util.Iterator;
 import java.util.List;
 
+/**
+ * Represents a variable in a CSP
+ */
+
 public class Variable implements Iterable<Integer>
 {
-	//===============================================================================
+	// =================================================================
 	// Properties
-	//===============================================================================
+	// =================================================================
 
 	private static int namingCounter = 1;
 	private Domain domain;
 	private int row, col, block;
 	private boolean modified;
-	private boolean unchangeable;
+	private boolean changeable;
 	private String name;
 
 	private int oldSize;
 
-	//===============================================================================
+	// =================================================================
 	// Constructors
-	//===============================================================================
+	// =================================================================
 
 	public Variable ( List<Integer> possible_Values, int row, int col, int block )
 	{
-		this.domain = new Domain(possible_Values);
-		if (size() == 1)
+		this.domain = new Domain( possible_Values );
+		if ( size() == 1 )
 		{
 			modified = true;
-			unchangeable = true;
+			changeable = false;
 		}
 		this.row = row;
 		this.col = col;
 		this.block = block;
 		this.name = "v" + namingCounter++;
 		this.oldSize = size();
+		this.changeable = true;
 	}
 
 	public Variable ( Variable v )
@@ -43,122 +48,101 @@ public class Variable implements Iterable<Integer>
 		this.block = v.block;
 		this.modified = v.modified;
 		this.name = v.name;
+		this.changeable = v.changeable;
 	}
 
-	//===============================================================================
+	// =================================================================
 	// Accessors
-	//===============================================================================
+	// =================================================================
 
-	/**
-	 * Used for local search. Used to differentiate between intialized assignments
-	 * and user assignments.
-	 * @return false if this variable was assigned at initialization.
-	 */
-	public boolean isChangeable()
+	public boolean isChangeable ( )
 	{
-		return !unchangeable;
+		return changeable;
 	}
 
-	public boolean isAssigned()
+	public boolean isAssigned ( )
 	{
-		return size() == 1 ? true : false;
+		return size() == 1;
 	}
 
-	public boolean isModified()
+	public boolean isModified ( )
 	{
 		return modified;
 	}
 
-	public void setModified ( boolean modified )
-	{
-		this.modified = modified;
-		this.domain.setModified(modified);
-	}
-
-	public int row()
+	public int row ( )
 	{
 		return row;
 	}
 
-	public int col()
+	public int col ( )
 	{
 		return col;
 	}
 
-	public int block()
+	public int block ( )
 	{
 		return block;
 	}
 
-	/**
-	 * Returns the value currently assigned to the IntVariable.
-	 * If the IntVariable is currently unassigned, returns 0
-	 * @return 0 if IntVariable is unassigned, Assignment otherwise
-	 */
-	public Integer getAssignment()
-	{
-		if (!this.isAssigned())
-		{
-			return 0;
-		}
-		else
-		{
-			return domain.getValues().get(0);
-		}
-	}
-
-	public List<Integer> Values()
-	{
-		return domain.getValues();
-	}
-
-	public int size()
+	public int size ( )
 	{
 		return domain.size();
 	}
 
-	public Domain getDomain()
+	// Returns the assigned value or 0 if unassigned
+	public Integer getAssignment ( )
+	{
+		if ( isAssigned() )
+			return domain.getValues().get( 0 );
+
+		return 0;
+	}
+
+	public Domain getDomain ( )
 	{
 		return domain;
 	}
 
-	public String getName()
+	public String getName ( )
 	{
 		return name;
 	}
 
-	//===============================================================================
-	// Modifiers
-	//===============================================================================
+	public List<Integer> getValues ( )
+	{
+		return domain.getValues();
+	}
 
-	/**
-	 * Used for local Search
-	 * @param val new assignment
-	 */
+	// =================================================================
+	// Modifiers
+	// =================================================================
+
+
+	public void setModified ( boolean modified )
+	{
+		if ( ! changeable )
+			return;
+
+		this.modified = modified;
+		this.domain.setModified( modified );
+	}
+
+	// Assign a value to the variable
 	public void assignValue ( int val )
 	{
+		if ( ! changeable )
+			return;
+
 		setDomain( new Domain( val ) );
 	}
 
-	/**
-	 * Used for Backtracking. Adds the changed domain to the Trail.
-	 * @param d new domain
-	 */
-	public void updateDomain ( Domain d )
-	{
-		if ( ! domain.equals( d ) )
-		{
-			domain = d;
-			modified = true;
-		}
-	}
-
-	/**
-	 * Performs a change to the domain without changing the Trail.
-	 * @param d new domain
-	 */
+	// Sets the domain of the variable
 	public void setDomain ( Domain d )
 	{
+		if ( ! changeable )
+			return;
+
 		if ( ! domain.equals( d ) )
 		{
 			domain = d;
@@ -166,19 +150,19 @@ public class Variable implements Iterable<Integer>
 		}
 	}
 
-	/**
-	 * Removes a single value from the domain of V.
-	 * @param val value to remove
-	 */
+	// Removes a value from the domain
 	public void removeValueFromDomain ( int val )
 	{
+		if ( ! changeable )
+			return;
+
 		domain.remove( val );
 		this.modified = domain.isModified();
 	}
 
-	//===============================================================================
+	// =================================================================
 	// Iterator
-	//===============================================================================
+	// =================================================================
 
 	@Override
 	public Iterator<Integer> iterator()
@@ -186,19 +170,20 @@ public class Variable implements Iterable<Integer>
 		return domain.iterator();
 	}
 
-	//===============================================================================
+	// =================================================================
 	// String Representation
-	//===============================================================================
-	public String toString()
+	// =================================================================
+
+	public String toString ( )
 	{
 		//prints node stats
 		StringBuilder sb = new StringBuilder();
 		sb.append(" Name: "+name);
 		sb.append("\tdomain: {");
-		for(Integer i : domain)
-		{
+
+		for ( Integer i : domain )
 			sb.append(i + ",");
-		}
+
 		sb.deleteCharAt(sb.length()-1);
 		sb.append("}");
 		return sb.toString();

@@ -5,22 +5,23 @@ import java.util.List;
 public class BTSolver
 {
 
-	//===============================================================================
+	// =================================================================
 	// Properties
-	//===============================================================================
+	// =================================================================
 
 	private ConstraintNetwork network;
-	private Trail trail;
-	private boolean hasSolution = false;
 	private SudokuBoard sudokuGrid;
+	private Trail trail;
+
+	private boolean hasSolution = false;
 
 	public String varHeuristics;
 	public String valHeuristics;
 	public String cChecks;
 
-	//===============================================================================
+	// =================================================================
 	// Constructors
-	//===============================================================================
+	// =================================================================
 
 	public BTSolver ( SudokuBoard sboard, Trail trail, String val_sh, String var_sh, String cc )
 	{
@@ -38,25 +39,28 @@ public class BTSolver
 	// =================================================================
 
 	// Basic consistency check, no propagation done
-	private boolean assignmentsCheck()
+	private boolean assignmentsCheck ( )
 	{
 		for ( Constraint c : network.getConstraints() )
-		{
 			if ( ! c.isConsistent() )
-			{
 				return false;
-			}
-		}
+
 		return true;
 	}
 
 	/**
 	 * Part 1 TODO: Implement the Forward Checking Heuristic
 	 *
+	 * This function will do both Constraint Propagation and check
+	 * the consistency of the network
+	 *
+	 * (1) If a variable is assigned then eliminate that value from
+	 *     the square's neighbors.
+	 *
 	 * Note: remember to trail.push variables before you assign them
 	 * Return: true is assignment is consistent, false otherwise
 	 */
-	private boolean forwardChecking()
+	private boolean forwardChecking ( )
 	{
 		return false;
 	}
@@ -64,10 +68,19 @@ public class BTSolver
 	/**
 	 * Part 2 TODO: Implement both of Norvig's Heuristics
 	 *
+	 * This function will do both Constraint Propagation and check
+	 * the consistency of the network
+	 *
+	 * (1) If a variable is assigned then eliminate that value from
+	 *     the square's neighbors.
+	 *
+	 * (2) If a constraint has only one possible place for a value
+	 *     then put the value there.
+	 *
 	 * Note: remember to trail.push variables before you assign them
 	 * Return: true is assignment is consistent, false otherwise
 	 */
-	private boolean norvigCheck()
+	private boolean norvigCheck ( )
 	{
 		return false;
 	}
@@ -80,12 +93,10 @@ public class BTSolver
 	private Variable getfirstUnassignedVariable()
 	{
 		for ( Variable v : network.getVariables() )
-		{
-			if ( !v.isAssigned() )
-			{
+			if ( ! v.isAssigned() )
 				return v;
-			}
-		}
+
+		// Everything is assigned
 		return null;
 	}
 
@@ -94,7 +105,7 @@ public class BTSolver
 	 *
 	 * Return: The unassigned variable with the smallest domain
 	 */
-	private Variable getMRV()
+	private Variable getMRV ( )
 	{
 		return null;
 	}
@@ -102,9 +113,9 @@ public class BTSolver
 	/**
 	 * Part 2 TODO: Implement the Degree Heuristic
 	 *
-	 * Return: The unassigned variable involved in the most constraints
+	 * Return: The unassigned variable with the most unassigned neighbors
 	 */
-	private Variable getDegree()
+	private Variable getDegree ( )
 	{
 		return null;
 	}
@@ -113,16 +124,16 @@ public class BTSolver
 	 * Part 2 TODO: Implement the Minimum Remaining Value Heuristic
 	 *                with Degree Heuristic as a Tie Breaker
 	 *
-	 * Return: The unassigned variable with the smallest domain and involved
-	 *             in the most constraints
+	 * Return: The unassigned variable with, first, the smallest domain
+	 *         and, second, the most unassigned neighbors
 	 */
-	private Variable MRVwithTieBreaker()
+	private Variable MRVwithTieBreaker ( )
 	{
 		return null;
 	}
 
 	// =================================================================
-	// Variable Selectors
+	// Value Selectors
 	// =================================================================
 
 	// Default Value Ordering
@@ -144,7 +155,11 @@ public class BTSolver
 	/**
 	 * Part 1 TODO: Implement the Least Constraining Value Heuristic
 	 *
+	 * The Least constraining value is the one that will knock the most
+	 * values out of it's neighbors domain.
+	 *
 	 * Return: A list of v's domain sorted by the LCV heuristic
+	 *         The LCV is first and the MCV is last
 	 */
 	public List<Integer> getValuesLCVOrder ( Variable v )
 	{
@@ -155,15 +170,7 @@ public class BTSolver
 	// Engine Functions
 	//==================================================================
 
-	/**
-	 * Method to start the solver
-	 */
-	public void solve()
-	{
-		solve ( 0 );
-	}
-
-	private void solve ( int level )
+	public void solve ( )
 	{
 		if ( hasSolution )
 			return;
@@ -176,7 +183,7 @@ public class BTSolver
 			for ( Variable var : network.getVariables() )
 			{
 				// If all variables haven't been assigned
-				if ( !var.isAssigned() )
+				if ( ! var.isAssigned() )
 				{
 					System.out.println( "Error" );
 					return;
@@ -193,14 +200,14 @@ public class BTSolver
 		{
 			// Store place in trail and push variable's state on trail
 			trail.placeTrailMarker();
-			trail.push(v);
+			trail.push( v );
 
 			// Assign the value
 			v.assignValue( i );
 
 			// Propagate constraints, check consistency, recurse
 			if ( checkConsistency() )
-				solve ( level + 1 );
+				solve();
 
 			// If this assignment succeeded, return
 			if ( hasSolution )
@@ -211,7 +218,7 @@ public class BTSolver
 		}
 	}
 
-	private boolean checkConsistency()
+	private boolean checkConsistency ( )
 	{
 		switch ( cChecks )
 		{
@@ -226,7 +233,7 @@ public class BTSolver
 		}
 	}
 
-	private Variable selectNextVariable()
+	private Variable selectNextVariable ( )
 	{
 		switch ( varHeuristics )
 		{
@@ -256,17 +263,17 @@ public class BTSolver
 		}
 	}
 
-	public boolean hasSolution()
+	public boolean hasSolution ( )
 	{
 		return hasSolution;
 	}
 
-	public SudokuBoard getSolution()
+	public SudokuBoard getSolution ( )
 	{
 		return network.toSudokuBoard ( sudokuGrid.getP(), sudokuGrid.getQ() );
 	}
 
-	public ConstraintNetwork getNetwork()
+	public ConstraintNetwork getNetwork ( )
 	{
 		return network;
 	}

@@ -3,48 +3,62 @@ import Variable
 import Domain
 import copy
 
+"""
+    Represents the trail of changes made. This allows backtracking to occur.
+"""
+
 class Trail:
-    def __init__(self):
-        """
-            Represents the trail of changes made. This allows backtracking to occur.
-        """
-        self.trailStack = []
+
+    # ==================================================================
+    # Properties
+    # ==================================================================
+    numPush = 0
+    numUndo = 0
+
+    # ==================================================================
+    # Constructor
+    # ==================================================================
+
+    def __init__ ( self ):
+        self.trailStack  = []
         self.trailMarker = []
 
-    ######### Accessors Method #########
-    def size(self):
-        return len(self.trailStack)
+    # ==================================================================
+    # Accessors
+    # ==================================================================
 
-    ######### Modified Method #########
-    def placeTrailMarker(self):
-        """
-            places a marker at the current point in the trail. Each time undo is
-            called, the latest marker is popped and the trail
-        """
-        self.trailMarker.append(len(self.trailStack))
-        # print("self.trailMarker: " + str(self.trailMarker))
+    def size ( self ):
+        return len( self.trailStack )
 
-    def push(self, v):
-        """
-            Adds a deep copy of a variable and its domain onto the trail.
-        """
-        # print("v in push--> " + str(v))
-        domainCopy = copy.deepcopy(v.domain)
-        vPair = [v, domainCopy] # v Variable and its deepcopy backup domain onto the trail
+    def getPushCount ( self ):
+        return Trail.numPush
+
+    def getUndoCount ( self ):
+        return Trail.numUndo
+
+    # ==================================================================
+    # Modifiers
+    # ==================================================================
+
+    # Places a marker in the trail
+    def placeTrailMarker ( self ):
+        self.trailMarker.append( len( self.trailStack ) )
+
+    """
+        Before you assign a variable in constraint propagation,
+        use this function to save its initial domain on the
+        backtrack trail. This way if the path you are on fails,
+        you can restore propagated domains correctly.
+    """
+    def push ( self, v ):
+        Trail.numPush += 1
+        domainCopy = copy.deepcopy( v.domain )
+        vPair = [v, domainCopy]
         self.trailStack.append(vPair)
 
-        # print("======================= ")
-        # print("self.trailStack at the moment: ")
-        # for i in self.trailStack:
-        #     print("variable --> " + str(i[0]))
-        #     print("domain backup --> " + str(i[1]))
-        # print("======================= ")
-
-    def undo(self):
-        """
-            Pops changes pushed onto the trail until it reaches the latest marker.
-            Also pops the latest marker.
-        """
+    # Pops and restores variables on the trail until the last trail marker
+    def undo ( self ):
+        Trail.numUndo += 1
         targetSize = self.trailMarker.pop() # targetSize target position on the trail to backtrack to
         size = len(self.trailStack)
         while size > targetSize:
@@ -53,10 +67,7 @@ class Trail:
             v.setDomain(vPair[1])
             size -= 1
 
-    def __str__(self):
-        output = "trailStack: " + str(self.trailStack)
-        output += "\ntrailMarker: " + str(self.trailMarker)
-        return output
-
-# Trail follows the singleton design pattern. A single class/object ever created.
-masterTrailVariable = Trail()
+    # Clears the trail
+    def clear ( self ):
+        self.trailStack = []
+        self.trailMarker = []

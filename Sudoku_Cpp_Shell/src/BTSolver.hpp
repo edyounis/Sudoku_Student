@@ -10,6 +10,7 @@
 #include <utility>
 #include <iostream>
 #include <vector>
+#include <algorithm>
 
 class BTSolver
 {
@@ -24,16 +25,16 @@ public:
 
 	// Variable Selectors (Implement these)
 	Variable* getfirstUnassignedVariable ( void );
-	Variable* MinimumRemainingValue      ( void );
-	Variable* Degree                     ( void );
-	Variable* MRVwithTieBreaker          ( void );
+	Variable* getMRV            ( void );
+	Variable* getDegree         ( void );
+	Variable* MRVwithTieBreaker ( void );
 
 	// Value Selectors (Implement these)
-	std::vector<int> getValuesInOrder       ( Variable* v );
-	std::vector<int> LeastConstrainingValue ( Variable* v );
+	std::vector<int> getValuesInOrder  ( Variable* v );
+	std::vector<int> getValuesLCVOrder ( Variable* v );
 
 	// Engine Functions
-	void solve ( int level = 0 );
+	void solve ( void );
 
 	bool checkConsistency ( void );
 	Variable* selectNextVariable ( void );
@@ -45,6 +46,7 @@ public:
 	ConstraintNetwork getNetwork ( void );
 
 private:
+	// Properties
 	ConstraintNetwork network;
 	SudokuBoard sudokuGrid;
 	Trail* trail;

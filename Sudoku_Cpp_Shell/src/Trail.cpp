@@ -2,14 +2,22 @@
 
 using namespace std;
 
+/**
+ * Represents the trail of changes made. This allows backtracking to occur.
+ */
+
+// =====================================================================
 // Constructor
+// =====================================================================
+
 Trail::Trail ( void )
 {
-	numPush = 0;
-	numUndo = 0;
 }
 
+// =====================================================================
 // Accessors
+// =====================================================================
+
 int Trail::size ( void )
 {
 	return trailStack.size();
@@ -25,11 +33,22 @@ int Trail::getUndoCount ( void )
 	return numUndo;
 }
 
+// =====================================================================
 // Modifiers
+// =====================================================================
+
+// Places a marker in the trail
 void Trail::placeTrailMarker ( void )
 {
 	trailMarker.push( trailStack.size() );
 }
+
+/**
+ * Before you assign a variable in constraint propagation,
+ * use this function to save its initial domain on the
+ * backtrack trail. This way if the path you are on fails,
+ * you can restore propagated domains correctly.
+ */
 
 void Trail::push ( Variable* v )
 {
@@ -37,6 +56,7 @@ void Trail::push ( Variable* v )
 	trailStack.push( pair<Variable*, Domain>( v, v->getDomain() ) );
 }
 
+// Pops and restores variables on the trail until the last trail marker
 void Trail::undo ( void )
 {
 	numUndo++;
@@ -50,6 +70,7 @@ void Trail::undo ( void )
 	}
 }
 
+// Clears the trail
 void Trail::clear ( void )
 {
 	while ( ! trailStack.empty() )

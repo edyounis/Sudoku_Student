@@ -9,17 +9,17 @@ import java.util.List;
 public class Constraint
 {
 
-	//===============================================================================
+	// =================================================================
 	// Properties
-	//===============================================================================
+	// =================================================================
 
 	public List<Variable> vars;
 
-	//===============================================================================
+	// =================================================================
 	// Constructors
-	//===============================================================================
+	// =================================================================
 
-	public Constraint()
+	public Constraint ( )
 	{
 		vars = new ArrayList<Variable>();
 	}
@@ -29,60 +29,42 @@ public class Constraint
 		this.vars = vars;
 	}
 
-	//===============================================================================
+	// =================================================================
 	// Modifiers
-	//===============================================================================
+	// =================================================================
 
 	public void addVariable ( Variable v )
 	{
-		vars.add(v);
+		vars.add( v );
 	}
 
-	//===============================================================================
+	// =================================================================
 	// Accessors
-	//===============================================================================
+	// =================================================================
 
-	public int size()
+	public int size ( )
 	{
 		return vars.size();
 	}
 
+	// Returns true if v is in the constraint, false otherwise
 	public boolean contains ( Variable v )
 	{
-		return vars.contains(v) ? true : false;
+		return vars.contains( v ) ? true : false;
 	}
 
-	public boolean isModified()
+	// Returns whether or not the a variable in the constraint has been modified
+	public boolean isModified ( )
 	{
 		for ( Variable var : vars )
-		{
 			if ( var.isModified() )
-			{
 				return true;
-			}
-		}
+
 		return false;
 	}
 
-	public int getConflicts()
-	{
-		int numConflicts = 0;
-		for ( Variable var : vars )
-		{
-			for ( Variable otherVar : vars )
-			{
-				if ( var.equals(otherVar) )
-					continue;
-
-				if ( var.getAssignment().equals(otherVar.getAssignment()) )
-					numConflicts++;
-			}
-		}
-
-		return numConflicts;
-	}
-
-	public boolean isConsistent()
+	// Returns true if constraint is consistent, false otherwise
+	public boolean isConsistent ( )
 	{
 		for ( Variable var : vars )
 		{
@@ -95,7 +77,7 @@ public class Constraint
 					continue;
 
 				if ( otherVar.isAssigned()
-				     && otherVar.getAssignment() == var.getAssignment() )
+					 && otherVar.getAssignment() == var.getAssignment() )
 					return false;
 			}
 		}
@@ -103,20 +85,22 @@ public class Constraint
 		return true;
 	}
 
-	//===============================================================================
+	// =================================================================
 	// String representation
-	//===============================================================================
+	// =================================================================
 
-	public String toString()
+	public String toString ( )
 	{
-		StringBuilder sb = new StringBuilder("{");
+		StringBuilder sb = new StringBuilder( "{" );
 		String delim = "";
-		for(Variable v : vars)
+
+		for ( Variable v : vars )
 		{
-			sb.append(delim).append(v.getName());
+			sb.append( delim ).append( v.getName() );
 			delim = ",";
 		}
-		sb.append("}");
+
+		sb.append( "}" );
 		return sb.toString();
 	}
 }

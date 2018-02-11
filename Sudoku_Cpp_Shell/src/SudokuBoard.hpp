@@ -10,6 +10,11 @@
 #include <vector>
 #include <fstream>
 
+/**
+ * Represents a Sudoku Board. This is converted to a constraint network,
+ * so BTSolver can interface with it as a CSP.
+ */
+
 class SudokuBoard
 {
 public:
@@ -21,7 +26,7 @@ public:
 	// Constructors
 	SudokuBoard ( int p, int q, int m ); // Will generate a random Sudoku board
 	SudokuBoard ( int p, int q, Board board ); // Will initialize a board
-	SudokuBoard ( std::string filename ); // Will generate a Sudoku board from file
+	SudokuBoard ( std::string filename ); // Will load a Sudoku board from file
 
 	// Accessors
 	int   get_p     ( void ) const;
@@ -29,12 +34,12 @@ public:
 	int   get_n     ( void ) const;
 	Board get_board ( void ) const;
 
-	// Returns a string representation of the board
+	// String representation
 	std::string toString ( void ) const;
 
 private:
-	int p;
-	int q;
+	int p; // number of rows in a block && number of block columns
+	int q; // number of columns in a block && number of block rows
 
 	Board board;
 

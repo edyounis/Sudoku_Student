@@ -3,8 +3,18 @@ import random
 import Constraint
 import Variable
 
+"""
+    Represents a Sudoku Board. This is converted to a constraint network,
+    so BTSolver can interface with it as a CSP.
+"""
+
 class SudokuBoard:
-    def __init__(self, p=None, q=None, m=None, board=None, filepath=None):
+
+    # ==================================================================
+    # Constructors
+    # ==================================================================
+
+    def __init__( self, p = None, q = None, m = None, board = None, filepath = None ):
         self.p = p
         self.q = q
         try:
@@ -57,51 +67,11 @@ class SudokuBoard:
                     self.board[randomRow][randomCol] = randomAssignment
                     m -= 1
 
+    # ==================================================================
+    # String representation
+    # ==================================================================
 
-    def isValidValue(self, row, col, value):
-        # check whether current value can be assigned to current variable
-        return self.isValidColValue(col, value) and self.isValidRowValue(row, value) and self.isValidBlock(row, col, value)
-
-
-    def isValidColValue(self, col, value):
-        return value not in [self.board[v][col] for v in range(self.N)]
-
-
-    def isValidRowValue(self, row, value):
-        return value not in [self.board[row][v] for v in range(self.N)]
-
-
-    def isValidBlock(self, row, col, value):
-        rDiv = row // self.p;
-        cDiv = col // self.q;
-        for i in range(rDiv * self.p, (rDiv + 1) * self.p):
-            for j in range(cDiv * self.q, (cDiv + 1) * self.q):
-                if self.board[i][j] == value:
-                    return False
-        return True
-
-    def intToOdometer(self, n):
-        alphabet='0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-        toReturn = ''
-
-        while n != 0:
-            n, i = divmod(n, len(alphabet))
-            toReturn = alphabet[i] + toReturn
-
-        if toReturn == '':
-            toReturn = '0'
-
-        return toReturn
-
-    def odometerToInt(self, s):
-        try:
-            return int(s, 36)
-        except:
-            return 0
-
-
-    ######### String Representation #########
-    def __str__(self):
+    def __str__ ( self ):
         output = "p:" + str(self.p) + "\tq:" \
                                             + str(self.q) + "\n"
         for i in range(self.N):
@@ -120,3 +90,49 @@ class SudokuBoard:
                     output += "- "
                 output += "\n"
         return output
+
+    # ==================================================================
+    # Private Helper Methods
+    # ==================================================================
+
+    def isValidValue ( self, row, col, value ):
+        # check whether current value can be assigned to current variable
+        return self.isValidColValue(col, value) and self.isValidRowValue(row, value) and self.isValidBlock(row, col, value)
+
+
+    def isValidColValue ( self, col, value ):
+        return value not in [self.board[v][col] for v in range(self.N)]
+
+
+    def isValidRowValue ( self, row, value ):
+        return value not in [self.board[row][v] for v in range(self.N)]
+
+
+    def isValidBlock ( self, row, col, value ):
+        rDiv = row // self.p;
+        cDiv = col // self.q;
+        for i in range(rDiv * self.p, (rDiv + 1) * self.p):
+            for j in range(cDiv * self.q, (cDiv + 1) * self.q):
+                if self.board[i][j] == value:
+                    return False
+        return True
+
+    def intToOdometer ( self, n ):
+        alphabet='0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+        toReturn = ''
+
+        while n != 0:
+            n, i = divmod(n, len(alphabet))
+            toReturn = alphabet[i] + toReturn
+
+        if toReturn == '':
+            toReturn = '0'
+
+        return toReturn
+
+    def odometerToInt ( self, s ):
+        try:
+            return int( s, 36 )
+
+        except:
+            return 0

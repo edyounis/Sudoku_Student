@@ -2,6 +2,16 @@
 
 using namespace std;
 
+/**
+ * Represents a Sudoku Board. This is converted to a constraint network,
+ * so BTSolver can interface with it as a CSP.
+ */
+
+// =====================================================================
+// Constructors
+// =====================================================================
+
+// Will generate a random Sudoku board
 SudokuBoard::SudokuBoard ( int _p, int _q, int _m )
 {
 	p = _p;
@@ -40,6 +50,7 @@ SudokuBoard::SudokuBoard ( int _p, int _q, int _m )
 	}
 }
 
+// Will initialize a board
 SudokuBoard::SudokuBoard ( int _p, int _q, Board _board )
 {
 	p = _p;
@@ -47,6 +58,7 @@ SudokuBoard::SudokuBoard ( int _p, int _q, Board _board )
 	board = _board;
 }
 
+// Will load a Sudoku board from file
 SudokuBoard::SudokuBoard ( std::string filename )
 {
 	ifstream file( filename );
@@ -70,6 +82,10 @@ SudokuBoard::SudokuBoard ( std::string filename )
 	}
 }
 
+// =====================================================================
+// Accessors
+// =====================================================================
+
 int SudokuBoard::get_p ( void ) const
 {
 	return p;
@@ -90,6 +106,9 @@ SudokuBoard::Board SudokuBoard::get_board ( void ) const
 	return board;
 }
 
+// =====================================================================
+// String representation
+// =====================================================================
 
 string SudokuBoard::toString ( void ) const
 {
@@ -122,6 +141,10 @@ string SudokuBoard::toString ( void ) const
 	}
 	return ss.str();
 }
+
+// =====================================================================
+// Private Helper Methods
+// =====================================================================
 
 bool SudokuBoard::check ( int row, int col, int value ) const
 {

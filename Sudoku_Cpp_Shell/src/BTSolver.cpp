@@ -2,7 +2,10 @@
 
 using namespace std;
 
-// Constructor
+// =====================================================================
+// Constructors
+// =====================================================================
+
 BTSolver::BTSolver ( SudokuBoard input, Trail* _trail,  string val_sh, string var_sh, string cc )
 : sudokuGrid( input.get_p(), input.get_q(), input.get_board() ), network( input )
 {
@@ -21,17 +24,20 @@ BTSolver::BTSolver ( SudokuBoard input, Trail* _trail,  string val_sh, string va
 bool BTSolver::assignmentsCheck ( void )
 {
 	for ( Constraint c : network.getConstraints() )
-	{
 		if ( ! c.isConsistent() )
-		{
 			return false;
-		}
-	}
+
 	return true;
 }
 
 /**
  * Part 1 TODO: Implement the Forward Checking Heuristic
+ *
+ * This function will do both Constraint Propagation and check
+ * the consistency of the network
+ *
+ * (1) If a variable is assigned then eliminate that value from
+ *     the square's neighbors.
  *
  * Note: remember to trail.push variables before you assign them
  * Return: true is assignment is consistent, false otherwise
@@ -43,6 +49,15 @@ bool BTSolver::forwardChecking ( void )
 
 /**
  * Part 2 TODO: Implement both of Norvig's Heuristics
+ *
+ * This function will do both Constraint Propagation and check
+ * the consistency of the network
+ *
+ * (1) If a variable is assigned then eliminate that value from
+ *     the square's neighbors.
+ *
+ * (2) If a constraint has only one possible place for a value
+ *     then put the value there.
  *
  * Note: remember to trail.push variables before you assign them
  * Return: true is assignment is consistent, false otherwise
@@ -60,12 +75,8 @@ bool BTSolver::norvigCheck ( void )
 Variable* BTSolver::getfirstUnassignedVariable ( void )
 {
 	for ( Variable* v : network.getVariables() )
-	{
 		if ( !(v->isAssigned()) )
-		{
 			return v;
-		}
-	}
 
 	// Everything is assigned
 	return nullptr;
@@ -76,17 +87,19 @@ Variable* BTSolver::getfirstUnassignedVariable ( void )
  *
  * Return: The unassigned variable with the smallest domain
  */
-Variable* BTSolver::MinimumRemainingValue ( void )
+Variable* BTSolver::getMRV ( void )
 {
 	return nullptr;
 }
 
 /**
- * Part 2 TODO: Implement the Degree Heuristic
+ * Part 2 TODO: Implement the Minimum Remaining Value Heuristic
+ *                with Degree Heuristic as a Tie Breaker
  *
- * Return: The unassigned variable involved in the most constraints
+ * Return: The unassigned variable with, first, the smallest domain
+ *         and, second, the most unassigned neighbors
  */
-Variable* BTSolver::Degree ( void )
+Variable* BTSolver::getDegree ( void )
 {
 	return nullptr;
 }
@@ -110,24 +123,30 @@ Variable* BTSolver::MRVwithTieBreaker ( void )
 // Default Value Ordering
 vector<int> BTSolver::getValuesInOrder ( Variable* v )
 {
-	return v->getDomain().getValues();
+	vector<int> values = v->getDomain().getValues();
+	sort( values.begin(), values.end() );
+	return values;
 }
 
 /**
  * Part 1 TODO: Implement the Least Constraining Value Heuristic
  *
+ * The Least constraining value is the one that will knock the most
+ * values out of it's neighbors domain.
+ *
  * Return: A list of v's domain sorted by the LCV heuristic
+ *         The LCV is first and the MCV is last
  */
-vector<int> BTSolver::LeastConstrainingValue ( Variable* v )
+vector<int> BTSolver::getValuesLCVOrder ( Variable* v )
 {
 	return vector<int>();
 }
 
 // =====================================================================
-// Engine functions
+// Engine Functions
 // =====================================================================
 
-void BTSolver::solve ( int level )
+void BTSolver::solve ( void )
 {
 	if ( hasSolution )
 		return;
@@ -140,7 +159,7 @@ void BTSolver::solve ( int level )
 		for ( Variable* var : network.getVariables() )
 		{
 			// If all variables haven't been assigned
-			if ( !var->isAssigned() )
+			if ( ! ( var->isAssigned() ) )
 			{
 				cout << "Error" << endl;
 				return;
@@ -164,12 +183,13 @@ void BTSolver::solve ( int level )
 
 		// Propagate constraints, check consistency, recurse
 		if ( checkConsistency() )
-			solve ( level+1 );
+			solve();
 
+		// If this assignment succeeded, return
 		if ( hasSolution )
 			return;
 
-		// Backtrack
+		// Otherwise backtrack
 		trail->undo();
 	}
 }
@@ -188,10 +208,10 @@ bool BTSolver::checkConsistency ( void )
 Variable* BTSolver::selectNextVariable ( void )
 {
 	if ( varHeuristics == "MinimumRemainingValue" )
-		return MinimumRemainingValue();
+		return getMRV();
 
 	if ( varHeuristics == "Degree" )
-		return Degree();
+		return getDegree();
 
 	if ( varHeuristics == "MRVwithTieBreaker" )
 		return MRVwithTieBreaker();
@@ -202,7 +222,7 @@ Variable* BTSolver::selectNextVariable ( void )
 vector<int> BTSolver::getNextValues ( Variable* v )
 {
 	if ( valHeuristics == "LeastConstrainingValue" )
-		return LeastConstrainingValue(v);
+		return getValuesLCVOrder(v);
 
 	return getValuesInOrder(v);
 }

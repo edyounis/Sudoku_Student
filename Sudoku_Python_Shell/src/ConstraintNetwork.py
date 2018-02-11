@@ -3,12 +3,17 @@ import Constraint
 import SudokuBoard
 from math import floor
 
+"""
+    CSP representation of the problem. Contains the variables, constraints, and
+    many helpful accessors.
+"""
 class ConstraintNetwork:
-    def __init__(self, sboard=None):
-        """
-            CSP representation of the problem. Contains the variables, constraints, and
-            many helpful accessors.
-        """
+
+    # ==================================================================
+    # Constructors
+    # ==================================================================
+
+    def __init__ ( self, sboard = None ):
         self.constraints = []
         self.variables = []
 
@@ -73,76 +78,86 @@ class ConstraintNetwork:
                     c.addVariable(v)
                 self.addConstraint(c)
 
-    ######### Modifiers Method #########
-    def addConstraint(self, c):
+    # ==================================================================
+    # Modifiers
+    # ==================================================================
+
+    def addConstraint ( self, c ):
         if c not in self.constraints:
-            self.constraints.append(c)
+            self.constraints.append( c )
 
-    def addVariable(self, v):
+    def addVariable ( self, v ):
         if v not in self.variables:
-            self.variables.append(v)
+            self.variables.append( v )
 
-    # def pushAssignment(self, a):
-    #     """
-    #         Used for Local Search. Assigns a value to a variable based on the parameter a
-    #         @param a Assignment to actualize
-    #     """
-    #     a.variable.assignValue(a.value)
+    # ==================================================================
+    # Accessors
+    # ==================================================================
 
-    ######### Accessors Method #########
-    def getNeighborsOfVariable(self, v):
+    def getConstraints ( self ):
+        return self.constraints
+
+    def getVariables ( self ):
+        return self.variables
+
+    # Returns all variables that share a constraint with v
+    def getNeighborsOfVariable ( self, v ):
         neighbors = set()
+
         for c in self.constraints:
-            if c.contains(v):
+            if c.contains( v ):
                 for x in c.vars:
-                    neighbors.add(x)
-        neighbors.remove(v)
-        return list(neighbors)
+                    neighbors.add( x )
 
-    # def isConsistent(self):
-    #     """
-    #         Used for local search. Determines if the current assignment is consistent.
-    #     """
-    #     for c in self.constraints:
-    #         return c.isConsistent()
-    #     return True
+        neighbors.remove( v )
+        return list( neighbors )
 
-    def getConstraintsContainingVariable(self, v):
+    # Returns true is every constraint is consistent
+    def isConsistent ( self ):
+        for c in self.constraints:
+            if not c.isConsistent():
+                return False
+
+        return True
+
+    # Returns a list of constraints that contains v
+    def getConstraintsContainingVariable ( self, v ):
         """
             @param v variable to check
             @return list of constraints that contains v
         """
         outList = []
         for c in self.constraints:
-            if c.contains(v):
-                outList.append(c)
+            if c.contains( v ):
+                outList.append( c )
         return outList
 
-    def getModifiedConstraints(self):
-        """
-            Returns the constraints that contain variables whose domains were
-            modified since the last call to this method.
+    """
+        Returns the constraints that contain variables whose domains were
+        modified since the last call to this method.
 
-            After getting the constraints, it will reset each variable to
-            unmodified
+        After getting the constraints, it will reset each variable to
+        unmodified
 
-            Note* The first call to this method returns the constraints containing
-            the initialized variables.
-
-            @return ArrayList of modified constraints
-        """
+        Note* The first call to this method returns the constraints containing
+        the initialized variables.
+    """
+    def getModifiedConstraints ( self ):
         mConstraints = []
         for c in self.constraints:
             if c.isModified():
-                mConstraints.append(c)
+                mConstraints.append( c )
 
         for v in self.variables:
-            v.setModified(False)
+            v.setModified( False )
 
         return mConstraints
 
-    ######### String Representation #########
-    def __str__(self):
+    # ==================================================================
+    # String Representation
+    # ==================================================================
+
+    def __str__ ( self ):
         output = str(len(self.variables)) + " Variables: {"
         delim = ""
 
@@ -162,10 +177,13 @@ class ConstraintNetwork:
 
         return output
 
-    ######### Conversion #########
-    def toSudokuBoard(self,p,q):
+    # ==================================================================
+    # Sudoku Board Representation
+    # ==================================================================
+
+    def toSudokuBoard ( self, p, q ):
         n = p*q
-        board = [[0 for j in range(n)] for i in range(n)]
+        board = [[ 0 for j in range( n )] for i in range( n )]
         row = 0
         col = 0
         for v in self.variables:
@@ -174,4 +192,4 @@ class ConstraintNetwork:
             if col == n:
                 col = 0
                 row += 1
-        return SudokuBoard.SudokuBoard(p,q,board=board)
+        return SudokuBoard.SudokuBoard( p, q, board = board )

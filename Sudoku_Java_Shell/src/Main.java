@@ -3,6 +3,11 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
 
+/**
+ * Main driver file, which is responsible for interfacing with the
+ * command line and properly starting the backtrack solver.
+ */
+
 public class Main
 {
 	public static void main ( String[] args )

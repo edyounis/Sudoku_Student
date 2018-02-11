@@ -5,16 +5,30 @@ import java.io.IOException;
 import java.util.Scanner;
 import java.util.Random;
 
+/**
+ * Represents a Sudoku Board. This is converted to a constraint network,
+ * so BTSolver can interface with it as a CSP.
+ */
+
 public class SudokuBoard
 {
-	private int p; //number of rows in a block && number of blocks per row
-	private int q; //number of columns in a block && number of blocks per column
+
+	// =================================================================
+	// Properties
+	// =================================================================
+
+	private int p; // number of rows in a block && number of block columns
+	private int q; // number of columns in a block && number of block rows
 
 	private int[][] board = null;
 
-	protected SudokuBoard ()
-	{
+	// =================================================================
+	// Constructors
+	// =================================================================
 
+	protected SudokuBoard ( )
+	{
+		this( 3, 3, null );
 	}
 
 	public SudokuBoard ( int p, int q )
@@ -22,6 +36,7 @@ public class SudokuBoard
 		this( p, q, null );
 	}
 
+	// Will initialize a board
 	public SudokuBoard ( int p, int q, int[][] board )
 	{
 		this.p = p;
@@ -29,6 +44,7 @@ public class SudokuBoard
 		this.board = board == null ? new int[9][9] : board;
 	}
 
+	// Will generate a random Sudoku board
 	public SudokuBoard ( int p, int q, int m )
 	{
 		this.p = p;
@@ -54,6 +70,7 @@ public class SudokuBoard
 		}
 	}
 
+	// Will load a Sudoku board from file
 	public SudokuBoard ( File file )
 	{
 		try
@@ -82,27 +99,35 @@ public class SudokuBoard
 		}
 	}
 
-	public int getP()
+	// =================================================================
+	// Accessors
+	// =================================================================
+
+	public int getP ( )
 	{
 		return p;
 	}
 
-	public int getQ()
+	public int getQ ( )
 	{
 		return q;
 	}
 
-	public int getN()
+	public int getN ( )
 	{
 		return p*q;
 	}
 
-	public int[][] getBoard()
+	public int[][] getBoard ( )
 	{
 		return board;
 	}
 
-	public String toString()
+	// =================================================================
+	// String representation
+	// =================================================================
+
+	public String toString ( )
 	{
 		int N = getN();
 		StringBuilder sb = new StringBuilder();
@@ -133,6 +158,10 @@ public class SudokuBoard
 		}
 		return sb.toString();
 	}
+
+	// =================================================================
+	// Private Helper Methods
+	// =================================================================
 
 	private boolean check ( int row, int col, int value )
 	{
@@ -205,15 +234,5 @@ public class SudokuBoard
 	private String intToOdometer ( int n )
 	{
 		return Integer.toString( n, 36 );
-		// String ret = "";
-
-		// for ( int i = n; n > 0; n /= 36 )
-		// {
-		// 	int r  = n % 36;
-		// 	byte x = (r < 10) ? ('0' + r) : ('A' + r - 10);
-		// 	ret = x + ret;
-		// }
-
-		// return ret == "" ? "0" : ret;
 	}
 }
