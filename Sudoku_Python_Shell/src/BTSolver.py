@@ -66,6 +66,15 @@ class BTSolver:
     def norvigCheck ( self ):
         return False
 
+    """
+         Optional TODO: Implement your own advanced Constraint Propagation
+
+         Completing the three tourn heuristic will automatically enter
+         your program into a tournament.
+     """
+    def getTournCC ( self ):
+        return None
+
     # ==================================================================
     # Variable Selectors
     # ==================================================================
@@ -105,6 +114,15 @@ class BTSolver:
     def MRVwithTieBreaker ( self ):
         return None
 
+    """
+         Optional TODO: Implement your own advanced Variable Heuristic
+
+         Completing the three tourn heuristic will automatically enter
+         your program into a tournament.
+     """
+    def getTournVar ( self ):
+        return None
+
     # ==================================================================
     # Value Selectors
     # ==================================================================
@@ -124,6 +142,15 @@ class BTSolver:
                 The LCV is first and the MCV is last
     """
     def getValuesLCVOrder ( self, v ):
+        return None
+
+    """
+         Optional TODO: Implement your own advanced Value Heuristic
+
+         Completing the three tourn heuristic will automatically enter
+         your program into a tournament.
+     """
+    def getTournVal ( self, v ):
         return None
 
     # ==================================================================
@@ -177,6 +204,9 @@ class BTSolver:
         if self.cChecks == "norvigCheck":
             return self.norvigCheck()
 
+        if self.cChecks == "tournCC":
+            return self.getTournCC()
+
         else:
             return self.assignmentsCheck()
 
@@ -184,21 +214,27 @@ class BTSolver:
         if self.varHeuristics == "MinimumRemainingValue":
             return self.getMRV()
 
-        elif self.varHeuristics == "Degree":
+        if self.varHeuristics == "Degree":
             return self.getDegree()
 
-        elif self.varHeuristics == "MRVwithTieBreaker":
+        if self.varHeuristics == "MRVwithTieBreaker":
             return self.MRVwithTieBreaker()
+
+        if self.varHeuristics == "tournVar":
+            return self.getTournVar()
 
         else:
             return self.getfirstUnassignedVariable()
 
     def getNextValues ( self, v ):
         if self.valHeuristics == "LeastConstrainingValue":
-            return self.getValuesLCVOrder(v)
+            return self.getValuesLCVOrder( v )
+
+        if self.valHeuristics == "tournVal":
+            return self.getTournVal( v )
 
         else:
-            return self.getValuesInOrder(v)
+            return self.getValuesInOrder( v )
 
     def getSolution ( self ):
         return self.network.toSudokuBoard(self.gameboard.p, self.gameboard.q)

@@ -11,8 +11,8 @@ import Trail
 import time
 
 """
-	Main driver file, which is responsible for interfacing with the
-	command line and properly starting the backtrack solver.
+    Main driver file, which is responsible for interfacing with the
+    command line and properly starting the backtrack solver.
 """
 
 def main ( ):
@@ -42,6 +42,11 @@ def main ( ):
 
         elif arg == "NOR":
             cc = "norvigCheck"
+
+        elif arg == "TOURN":
+            var_sh = "tournVar"
+            val_sh = "tournVal"
+            cc     = "tournCC"
 
         else:
             file = arg;
@@ -83,7 +88,7 @@ def main ( ):
             solver.solve()
 
             if solver.hassolution:
-               	numSolutions += 1;
+                numSolutions += 1;
 
         print ( "Solutions Found: " + str(numSolutions) )
         print ( "Assignments: " + str(trail.getPushCount()) )

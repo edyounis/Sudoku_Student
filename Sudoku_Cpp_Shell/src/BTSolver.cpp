@@ -67,6 +67,17 @@ bool BTSolver::norvigCheck ( void )
 	return false;
 }
 
+/**
+ * Optional TODO: Implement your own advanced Constraint Propagation
+ *
+ * Completing the three tourn heuristic will automatically enter
+ * your program into a tournament.
+ */
+bool BTSolver::getTournCC ( void )
+{
+	return false;
+}
+
 // =====================================================================
 // Variable Selectors
 // =====================================================================
@@ -116,6 +127,17 @@ Variable* BTSolver::MRVwithTieBreaker ( void )
 	return nullptr;
 }
 
+/**
+ * Optional TODO: Implement your own advanced Variable Heuristic
+ *
+ * Completing the three tourn heuristic will automatically enter
+ * your program into a tournament.
+ */
+Variable* BTSolver::getTournVar ( void )
+{
+	return nullptr;
+}
+
 // =====================================================================
 // Variable Selectors
 // =====================================================================
@@ -138,6 +160,20 @@ vector<int> BTSolver::getValuesInOrder ( Variable* v )
  *         The LCV is first and the MCV is last
  */
 vector<int> BTSolver::getValuesLCVOrder ( Variable* v )
+{
+	return vector<int>();
+}
+
+/**
+ * Part 1 TODO: Implement the Least Constraining Value Heuristic
+ *
+ * The Least constraining value is the one that will knock the most
+ * values out of it's neighbors domain.
+ *
+ * Return: A list of v's domain sorted by the LCV heuristic
+ *         The LCV is first and the MCV is last
+ */
+vector<int> BTSolver::getTournVal ( Variable* v )
 {
 	return vector<int>();
 }
@@ -202,6 +238,9 @@ bool BTSolver::checkConsistency ( void )
 	if ( cChecks == "norvigCheck" )
 		return norvigCheck();
 
+	if ( cChecks == "tournCC" )
+		return getTournCC();
+
 	return assignmentsCheck();
 }
 
@@ -216,15 +255,21 @@ Variable* BTSolver::selectNextVariable ( void )
 	if ( varHeuristics == "MRVwithTieBreaker" )
 		return MRVwithTieBreaker();
 
+	if ( varHeuristics == "tournVar" )
+		return getTournVar();
+
 	return getfirstUnassignedVariable();
 }
 
 vector<int> BTSolver::getNextValues ( Variable* v )
 {
 	if ( valHeuristics == "LeastConstrainingValue" )
-		return getValuesLCVOrder(v);
+		return getValuesLCVOrder( v );
 
-	return getValuesInOrder(v);
+	if ( valHeuristics == "tournVal" )
+		return getTournVal( v );
+
+	return getValuesInOrder( v );
 }
 
 bool BTSolver::haveSolution ( void )

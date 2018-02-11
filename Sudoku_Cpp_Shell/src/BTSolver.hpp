@@ -22,16 +22,19 @@ public:
 	bool assignmentsCheck ( void );
 	bool forwardChecking  ( void );
 	bool norvigCheck      ( void );
+	bool getTournCC       ( void );
 
 	// Variable Selectors (Implement these)
 	Variable* getfirstUnassignedVariable ( void );
 	Variable* getMRV            ( void );
 	Variable* getDegree         ( void );
 	Variable* MRVwithTieBreaker ( void );
+	Variable* getTournVar       ( void );
 
 	// Value Selectors (Implement these)
 	std::vector<int> getValuesInOrder  ( Variable* v );
 	std::vector<int> getValuesLCVOrder ( Variable* v );
+	std::vector<int> getTournVal       ( Variable* v );
 
 	// Engine Functions
 	void solve ( void );

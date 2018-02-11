@@ -40,6 +40,13 @@ public class Main
 			else if ( token.equals( "NOR" ) )
 				cc = "norvigCheck";
 
+			else if ( token.equals( "TOURN" ) )
+			{
+				 var_sh = "tournVar";
+				 val_sh = "tournVal";
+				 cc     = "tournCC";
+			}
+
 			else
 				file = token;
 		}

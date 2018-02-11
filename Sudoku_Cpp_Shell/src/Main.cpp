@@ -50,6 +50,13 @@ int main ( int argc, char *argv[] )
 		else if ( token == "NOR" )
 			cc = "norvigCheck";
 
+		else if ( token == "TOURN" )
+		{
+			 var_sh = "tournVar";
+			 val_sh = "tournVal";
+			 cc     = "tournCC";
+		}
+
 		else
 			file = token;
 	}

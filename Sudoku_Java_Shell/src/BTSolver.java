@@ -85,6 +85,17 @@ public class BTSolver
 		return false;
 	}
 
+	/**
+	 * Optional TODO: Implement your own advanced Constraint Propagation
+	 *
+	 * Completing the three tourn heuristic will automatically enter
+	 * your program into a tournament.
+	 */
+	private boolean getTournCC ( )
+	{
+		return false;
+	}
+
 	// =================================================================
 	// Variable Selectors
 	// =================================================================
@@ -132,6 +143,17 @@ public class BTSolver
 		return null;
 	}
 
+	/**
+	 * Optional TODO: Implement your own advanced Variable Heuristic
+	 *
+	 * Completing the three tourn heuristic will automatically enter
+	 * your program into a tournament.
+	 */
+	private Variable getTournVar ( )
+	{
+		return null;
+	}
+
 	// =================================================================
 	// Value Selectors
 	// =================================================================
@@ -162,6 +184,17 @@ public class BTSolver
 	 *         The LCV is first and the MCV is last
 	 */
 	public List<Integer> getValuesLCVOrder ( Variable v )
+	{
+		return null;
+	}
+
+	/**
+	 * Optional TODO: Implement your own advanced Value Heuristic
+	 *
+	 * Completing the three tourn heuristic will automatically enter
+	 * your program into a tournament.
+	 */
+	public List<Integer> getTournVal ( Variable v )
 	{
 		return null;
 	}
@@ -228,6 +261,9 @@ public class BTSolver
 			case "norvigCheck":
 				return norvigCheck();
 
+			case "tournCC":
+				return getTournCC();
+
 			default:
 				return assignmentsCheck();
 		}
@@ -246,6 +282,9 @@ public class BTSolver
 			case "MRVwithTieBreaker":
 				return MRVwithTieBreaker();
 
+			case "tournVar":
+				return getTournVar();
+
 			default:
 				return getfirstUnassignedVariable();
 		}
@@ -256,10 +295,13 @@ public class BTSolver
 		switch ( valHeuristics )
 		{
 			case "LeastConstrainingValue":
-				return getValuesLCVOrder(v);
+				return getValuesLCVOrder( v );
+
+			case "tournVal":
+				return getTournVal( v );
 
 			default:
-				return getValuesInOrder(v);
+				return getValuesInOrder( v );
 		}
 	}
 
