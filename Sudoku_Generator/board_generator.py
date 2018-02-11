@@ -23,6 +23,19 @@ def isValidBlock(row, col, value, p, q, N, board):
                 return False
     return True
 
+def intToOdometer ( n ):
+    alphabet='0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+    toReturn = ''
+
+    while n != 0:
+        n, i = divmod(n, len(alphabet))
+        toReturn = alphabet[i] + toReturn
+
+    if toReturn == '':
+        toReturn = '0'
+
+    return toReturn
+
 def genBoard ( p, q, m, filename ):
     N = p*q
     board = [[0 for j in range(N)] for i in range(N)]
@@ -42,7 +55,7 @@ def genBoard ( p, q, m, filename ):
     file.write( str(p) + " " + str(q) + "\n" )
     for i in range(N):
         for j in range(N):
-            file.write( str(board[i][j]) + " " )
+            file.write( intToOdometer( board[i][j] ) + " " )
         file.write("\n")
 
     file.close();
