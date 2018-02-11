@@ -139,7 +139,7 @@ Variable* BTSolver::getTournVar ( void )
 }
 
 // =====================================================================
-// Variable Selectors
+// Value Selectors
 // =====================================================================
 
 // Default Value Ordering
