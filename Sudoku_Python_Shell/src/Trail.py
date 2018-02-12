@@ -52,7 +52,7 @@ class Trail:
     """
     def push ( self, v ):
         Trail.numPush += 1
-        domainCopy = copy.deepcopy( v.domain )
+        domainCopy = Domain.Domain( [i for i in v.getValues()] )
         vPair = [v, domainCopy]
         self.trailStack.append(vPair)
 
