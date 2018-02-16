@@ -27,17 +27,19 @@ public class Variable implements Iterable<Integer>
 	public Variable ( List<Integer> possible_Values, int row, int col, int block )
 	{
 		this.domain = new Domain( possible_Values );
-		if ( size() == 1 )
-		{
-			modified = true;
-			changeable = false;
-		}
 		this.row = row;
 		this.col = col;
 		this.block = block;
 		this.name = "v" + namingCounter++;
 		this.oldSize = size();
+		this.modified = false;
 		this.changeable = true;
+
+		if ( size() == 1 )
+		{
+			modified = true;
+			changeable = false;
+		}
 	}
 
 	public Variable ( Variable v )
