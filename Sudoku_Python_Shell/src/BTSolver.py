@@ -170,10 +170,20 @@ class BTSolver:
                 The LCV is first and the MCV is last
     """
     def getValuesLCVOrder ( self, v ):
-        return None
+        return self.getValuesInOrder(v)
+##
+##        temp = {}
+##        res = []
+##        for var in self.network.getNeighborsOfVariable(v):
+##            if not var.isAssigned():
+##                temp[var] = var.domain.size()
+##        for (var, len) in sorted(temp.items(),key=lambda x:x[1], reverse = True):
+##            res.append(var)
+##        for i in res:
+##            return i.getValues()
 
     """
-         Optional TODO: Implement your own advanced Value Heuristic
+         OptionaleTODO: Implement your own advanced Value Heuristic
 
          Completing the three tourn heuristic will automatically enter
          your program into a tournament.
