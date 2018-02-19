@@ -123,9 +123,6 @@ public class Variable implements Iterable<Integer>
 
 	public void setModified ( boolean modified )
 	{
-		if ( ! changeable )
-			return;
-
 		this.modified = modified;
 		this.domain.setModified( modified );
 	}

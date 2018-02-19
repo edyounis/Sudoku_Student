@@ -116,9 +116,6 @@ bool Variable::operator!= ( const Variable &other ) const
 
 void Variable::setModified( bool modified )
 {
-	if ( ! changeable )
-		return;
-
 	this->modified = modified;
 	this->domain.setModified(modified);
 }

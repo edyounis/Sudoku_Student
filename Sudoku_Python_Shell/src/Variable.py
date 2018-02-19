@@ -74,9 +74,6 @@ class Variable:
     # ==================================================================
 
     def setModified ( self, mod ):
-        if not self.changeable:
-            return
-
         self.modified = mod
         self.domain.modified = mod
 
