@@ -64,7 +64,7 @@ public class Main
 			if ( solver.hasSolution() )
 			{
 				System.out.println( solver.getSolution().toString() );
-				System.out.println( "Assignments: " + trail.getPushCount() );
+				System.out.println( "Trail Pushes: " + trail.getPushCount() );
 				System.out.println( "Backtracks: " + trail.getUndoCount() );
 			}
 			else
@@ -106,7 +106,7 @@ public class Main
 			}
 
 			System.out.println( "Solutions Found: " + numSolutions );
-			System.out.println( "Assignments: " + trail.getPushCount() );
+			System.out.println( "Trail Pushes: " + trail.getPushCount() );
 			System.out.println( "Backtracks: "  + trail.getUndoCount() );
 			return;
 		}
@@ -120,7 +120,7 @@ public class Main
 		if ( solver.hasSolution() )
 		{
 			System.out.println( solver.getSolution().toString() );
-			System.out.println( "Assignments: " + trail.getPushCount() );
+			System.out.println( "Trail Pushes: " + trail.getPushCount() );
 			System.out.println( "Backtracks: " + trail.getUndoCount() );
 		}
 		else

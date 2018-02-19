@@ -39,7 +39,7 @@ bool BTSolver::assignmentsCheck ( void )
  * (1) If a variable is assigned then eliminate that value from
  *     the square's neighbors.
  *
- * Note: remember to trail.push variables before you assign them
+ * Note: remember to trail.push variables before you change their domain
  * Return: true is assignment is consistent, false otherwise
  */
 bool BTSolver::forwardChecking ( void )
@@ -59,7 +59,7 @@ bool BTSolver::forwardChecking ( void )
  * (2) If a constraint has only one possible place for a value
  *     then put the value there.
  *
- * Note: remember to trail.push variables before you assign them
+ * Note: remember to trail.push variables before you change their domain
  * Return: true is assignment is consistent, false otherwise
  */
 bool BTSolver::norvigCheck ( void )

@@ -74,7 +74,7 @@ int main ( int argc, char *argv[] )
 		if ( solver.haveSolution() )
 		{
 			cout << solver.getSolution().toString() << endl;
-			cout << "Assignments: " << trail.getPushCount() << endl;
+			cout << "Trail Pushes: " << trail.getPushCount() << endl;
 			cout << "Backtracks: "  << trail.getUndoCount() << endl;
 		}
 		else
@@ -123,7 +123,7 @@ int main ( int argc, char *argv[] )
 		}
 
 		cout << "Solutions Found: " << numSolutions << endl;
-		cout << "Assignments: " << trail.getPushCount() << endl;
+		cout << "Trail Pushes: " << trail.getPushCount() << endl;
 		cout << "Backtracks: "  << trail.getUndoCount() << endl;
 		closedir (dir);
 
@@ -139,7 +139,7 @@ int main ( int argc, char *argv[] )
 	if ( solver.haveSolution() )
 	{
 		cout << solver.getSolution().toString() << endl;
-		cout << "Assignments: " << trail.getPushCount() << endl;
+		cout << "Trail Pushes: " << trail.getPushCount() << endl;
 		cout << "Backtracks: "  << trail.getUndoCount() << endl;
 	}
 	else

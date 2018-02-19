@@ -62,7 +62,7 @@ def main ( ):
 
         if solver.hassolution:
             print( solver.getSolution() )
-            print( "Assignments: " + str(trail.getPushCount()) )
+            print( "Trail Pushes: " + str(trail.getPushCount()) )
             print( "Backtracks: " + str(trail.getUndoCount()) )
 
         else:
@@ -91,7 +91,7 @@ def main ( ):
                 numSolutions += 1;
 
         print ( "Solutions Found: " + str(numSolutions) )
-        print ( "Assignments: " + str(trail.getPushCount()) )
+        print ( "Trail Pushes: " + str(trail.getPushCount()) )
         print ( "Backtracks: "  + str(trail.getUndoCount()) )
 
         return
@@ -104,7 +104,7 @@ def main ( ):
 
     if solver.hassolution:
         print( solver.getSolution() )
-        print( "Assignments: " + str(trail.getPushCount()) )
+        print( "Trail Pushes: " + str(trail.getPushCount()) )
         print( "Backtracks: " + str(trail.getUndoCount()) )
 
     else:
