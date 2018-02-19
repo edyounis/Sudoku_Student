@@ -80,6 +80,7 @@ public class Trail
 				Object[] vPair = trailStack.pop();
 				Variable v = (Variable) vPair[0];
 				v.setDomain((Domain) vPair[1]);
+				v.setModified( false );
 			}
 		}
 		catch ( EmptyStackException e )

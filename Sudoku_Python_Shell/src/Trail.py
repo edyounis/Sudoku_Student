@@ -64,7 +64,8 @@ class Trail:
         while size > targetSize:
             vPair = self.trailStack.pop()
             v = vPair[0]
-            v.setDomain(vPair[1])
+            v.setDomain( vPair[1] )
+            v.setModified( False )
             size -= 1
 
     # Clears the trail

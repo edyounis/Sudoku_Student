@@ -67,6 +67,7 @@ void Trail::undo ( void )
 		pair<Variable*, Domain> vPair = trailStack.top();
 		trailStack.pop();
 		vPair.first->setDomain(vPair.second);
+		vPair.first->setModified( false );
 	}
 }
 
