@@ -46,8 +46,27 @@ class BTSolver:
         Return: true is assignment is consistent, false otherwise
     """
     def forwardChecking ( self ):
-        return False
+        # Constraint Propagation
+        mVars = set()
+        for c in self.network.getModifiedConstraints():
+            for v in c.vars:
+                mVars.add(v)
 
+        for v in mVars:
+            if v.getDomain().isEmpty():
+                return False
+            for n in self.network.getNeighborsOfVariable(v):
+                if v.getAssignment() in n.getValues():
+                    if not n.isAssigned():
+                        self.trail.push(n)
+                        n.removeValueFromDomain(v.getAssignment())
+                    else:
+                        return False
+            # Check the consistency
+            for c in self.network.getConstraintsContainingVariable(v):
+                if not c.isConsistent():
+                    return False
+        return True
     """
         Part 2 TODO: Implement both of Norvig's Heuristics
 
