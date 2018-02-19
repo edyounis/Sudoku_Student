@@ -113,7 +113,16 @@ class BTSolver:
         Return: The unassigned variable with the smallest domain
     """
     def getMRV ( self ):
-        return None
+        temp = {}
+        for var in self.network.getVariables():
+            if not var.isAssigned():
+                temp[var] = var.domain.size()
+        res = sorted(temp.items(),key=lambda x:x[1])
+        if len(res) > 0:
+            return res[0][0]
+        else:
+            return None
+        
 
     """
         Part 2 TODO: Implement the Degree Heuristic
