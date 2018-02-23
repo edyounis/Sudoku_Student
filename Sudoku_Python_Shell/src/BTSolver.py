@@ -46,8 +46,27 @@ class BTSolver:
         Return: true is assignment is consistent, false otherwise
     """
     def forwardChecking ( self ):
-        return False
+        # Constraint Propagation
+        mVars = set()
+        for c in self.network.getModifiedConstraints():
+            for v in c.vars:
+                mVars.add(v)
 
+        for v in mVars:
+            if v.getDomain().isEmpty():
+                return False
+            for n in self.network.getNeighborsOfVariable(v):
+                if v.getAssignment() in n.getValues():
+                    if not n.isAssigned():
+                        self.trail.push(n)
+                        n.removeValueFromDomain(v.getAssignment())
+                    else:
+                        return False
+            # Check the consistency
+            for c in self.network.getConstraintsContainingVariable(v):
+                if not c.isConsistent():
+                    return False
+        return True
     """
         Part 2 TODO: Implement both of Norvig's Heuristics
 
@@ -94,7 +113,16 @@ class BTSolver:
         Return: The unassigned variable with the smallest domain
     """
     def getMRV ( self ):
-        return None
+        temp = {}
+        for var in self.network.getVariables():
+            if not var.isAssigned():
+                temp[var] = var.domain.size()
+        res = sorted(temp.items(),key=lambda x:x[1])
+        if len(res) > 0:
+            return res[0][0]
+        else:
+            return None
+        
 
     """
         Part 2 TODO: Implement the Degree Heuristic
@@ -142,10 +170,20 @@ class BTSolver:
                 The LCV is first and the MCV is last
     """
     def getValuesLCVOrder ( self, v ):
-        return None
+        return self.getValuesInOrder(v)
+##
+##        temp = {}
+##        res = []
+##        for var in self.network.getNeighborsOfVariable(v):
+##            if not var.isAssigned():
+##                temp[var] = var.domain.size()
+##        for (var, len) in sorted(temp.items(),key=lambda x:x[1], reverse = True):
+##            res.append(var)
+##        for i in res:
+##            return i.getValues()
 
     """
-         Optional TODO: Implement your own advanced Value Heuristic
+         OptionaleTODO: Implement your own advanced Value Heuristic
 
          Completing the three tourn heuristic will automatically enter
          your program into a tournament.
