@@ -104,11 +104,9 @@ Variable* BTSolver::getMRV ( void )
 }
 
 /**
- * Part 2 TODO: Implement the Minimum Remaining Value Heuristic
- *                with Degree Heuristic as a Tie Breaker
+ * Part 2 TODO: Implement the Degree Heuristic
  *
- * Return: The unassigned variable with, first, the smallest domain
- *         and, second, the most unassigned neighbors
+ * Return: The unassigned variable with the most unassigned neighbors
  */
 Variable* BTSolver::getDegree ( void )
 {
